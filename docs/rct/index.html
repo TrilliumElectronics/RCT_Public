@@ -67,6 +67,10 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#inspecting-the-data">Inspecting the Data</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#aborting-a-test">Aborting a Test</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#troubleshooting-tests">Troubleshooting Tests</a>
+    </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#staying-up-to-date">Staying Up-to-Date</a>
@@ -118,15 +122,157 @@
                 <h1 id="introduction-to-rct">Introduction to RCT</h1>
 <p><img alt="Screenshot" src="img/Main_Window.JPG" /></p>
 <h2 id="installation">Installation</h2>
+<p>RCT requires Omniscope to provide the PC-to-RV-C databus connection and other services.  The instructions here assume that Omniscope has been installed and the adapter is plugged into the PC USB port.</p>
 <h3 id="omniscope-hp">Omniscope HP</h3>
+<p>Some RCT tests require more precise timing than the standard Omniscope program allows.  Therefore we created a slightly supercharged version, OmniscopeHP, just for RCT.  You can run RCT on standard Omniscope 
+but some tests won't give valid results, and you can run standard Omniscope tools on OmniscopeHP but there may be stability issues.</p>
+<p>To install OmniscopeHP, just copy OmniscopeHP.exe into your Omniscope folder.  You may wish to drag it to the taskbar to "pin" the program there, and/or hold down the Alt key and drag it to the Desktop to creat a 
+shortcut.  OmniscopeHP will inherit all the settings and keys used by Omniscope, and you can go back-and-forth between using OmniscopeHP and Omniscope at will.</p>
 <h3 id="key-management">Key Management</h3>
+<p>To use RCT, you will need a key from Trillium Electronics.  See the <a href="../omniscope/">Omniscope</a> page for instructions.  Note that, like Omniscope, you can share RCT keys across computers.</p>
 <h2 id="running-rct">Running RCT</h2>
+<p>RCT does not need to be targeted towards a particular device in Omniscope.  You may invoke RCT by any of the methods provided in the Omniscope program, or simply by running RVCCompTest.exe from Window Explorer or a 
+command prompt <em>after</em> starting OmniscopeHP.</p>
 <h3 id="using-profiles">Using Profiles</h3>
+<p><img alt="Screenshot" src="img/profile.JPG" /></p>
+<p>A <em>profile</em> is a file containing the settings used during tests.  It contains information on the product and company intended to help you track and organize your tests, as well as technical parameters uses in the tests.<br />
+The data is stored in a text file with the <em>.ocf</em> extension.  The <em>File</em> menu allows you to load and save the current profile, or reset the current profile to the default values.  The <em>Save</em> option also allows you to create
+a new profile under a new name.</p>
+<p>The contents of the current profile are displayed in the box at the top of the screen.  You may edit values by clicking on the left-down arrow at the right.  Most technical parameters are group by the relevant tests - clicking the 
+down arrow on the left will let you navigate to the test and the items used in that test.  Note that the same setting may apply to multiple tests.  Changing it for one test will change it for all.</p>
+<p>The program does <em>not</em> automatically save the profile information, and some tests will modify data within the profile.  </p>
+<p>Note that the profile data is stored as plain text.  You may take advantage of this to copy, search, or export the data.  </p>
+<pre><code>:Program COMPTEST
+:Version 1.0.0
+:Created Friday, November 14, 2025  at 11:51:22
+:SET Company=Rabblefish LLC
+:SET Product Name=RG150
+:SET Product Version=1.03
+:SET Tested By=Martin Perlot
+:SET Clear Text Log at Start=Yes
+:SET Restore Omniscope Mute/Echo Modes After Test=Yes
+:SET 250MS Timing Tolerance=10 ms
+:SET DSA For Address Claiming=253
+</code></pre>
+<p>We strongly recommend that all of the identification data - Company, Product Name/Version, and Test By - be completely and accurately entered in a consistent manner.  The program will automatically add the date, time
+and the program version information to the record for each specific test run.  </p>
 <h3 id="using-logs">Using Logs</h3>
+<p>Most of the screen is dedicated to the test log.  You can expand the box by dragging the lower-right corner of the program box with the mouse.</p>
+<p>When testing, the log box will display text as the test progresses.  As the test runs, it will display the following types of messages:</p>
+<ul>
+<li>Progress messages, such as:<ul>
+<li><em>Starting Test : A40  10-2025   Dynamic Addressing Bootup</em></li>
+<li><em>Setting Omniscope to Tools</em></li>
+<li><em>Test A40 complete.</em></li>
+</ul>
+</li>
+<li>User Instructions, such as:<ul>
+<li><em>Start with an empty network, DUT powered off or disconnected.</em></li>
+<li><em>Power Up DUT</em></li>
+<li>Follow the instructions.  You don't usually have to hurry - the instructions will tell you if there is a time requirement.</li>
+</ul>
+</li>
+<li>Error messasges, such as:<ul>
+<li><em>DSA Category is not set.  Aborting test.</em></li>
+<li><em>Unexpected ADDRESS_CLAIM received.  Test is invalid.  Aborting.</em></li>
+<li>Most errors will lead to the test being aborted.</li>
+</ul>
+</li>
+</ul>
+<p>After the test is complete, the log box will display the following information:</p>
+<ul>
+<li>The test identifier - including the published month/year - and description.</li>
+<li>The date of the RCT code, for the individual test and the full RCT executable.</li>
+<li>The date and time of the test.</li>
+<li>The product and company information, from the profile.</li>
+<li>All settings from the profile used in the test.</li>
+</ul>
+<pre><code>Test                 : A40 [10-2025]  Dynamic Addressing Bootup
+Code Version         : Revised 11-4-2025              Compiled Dec  8 2025
+Test Date/Time       : Monday, December 08, 2025  10:04:13
+Test Profile         : C:\Temp\TestProfile_3.ocf
+Company              : Rabblefish LLC
+Product Name         : RG150
+Product Version      : 1.03
+Tested By            : Martin Perlot
+DSA Category                   = Appliances and Bridges
+</code></pre>
+<ul>
+<li>The list of potential failure modes, with the PASS/DNP result.<ul>
+<li>If DNP, usually a description of the failure, plus the offending message is included.</li>
+</ul>
+</li>
+</ul>
+<pre><code>PASS : Request does not use SA FEh                                 
+PASS : Request target is outside the device's dynamic range.       
+PASS : Another message precedes the request.                       
+PASS : The request payload is not 8 bytes.                         
+PASS : The requested DGN is not EE00h.                             
+PASS : A global request for ADDRESS_CLAIM is transmitted.          
+PASS : The device attempts to claim multiple addresses.            
+____ : Logs have been examined for other possible failure modes.
+</code></pre>
+<ul>
+<li>(Usually) One or more data logs.<ul>
+<li>Some messages in the log may be parsed.</li>
+</ul>
+</li>
+</ul>
+<pre><code>Log size : 3 msgs
+      4.811  18EADAFE  REQUEST [DA]                        0EADA:FE  00 EE 00 FF FF FF FF FF
+~~DGNRequest [218]=EE00  
+      4.911  18EE00DA  ADDRESS_CLAIMED                     0EE00:DA  47 53 DF 0E 33 FF 00 80
+      5.662  19FDE6DA  CAN_BUS_STS                         1FDE6:DA  04 FF FF FF FF 10 F1 FF
+</code></pre>
+<p>The test log may be saved to a text file.  By default RCT will name the file by the product name, test ID, and test date/time (e.g. <em>RG150_A40_2512080846.txt</em>).  You may edit this before saving.  You may also copy 
+the log to the clipboard.</p>
+<p>The test log may occasionally display messages outside the testing process.  The <em>OMNISCOPE may have crashed!</em> message usually indicates that the Omniscope program has lost communications or otherwise stopped working.
+You may be able to revive Omniscope by selecting <em>Reconnect</em> from its menu.  If not, usually you will need to close RCT and restart Omniscope and RCT again.  If the problem persists, try to simplify your setup and run as
+few programs as possible.  Windows is not a real-time operating system and OmniscopeHP needs as little latency as possible.</p>
 <h3 id="inspecting-the-data">Inspecting the Data</h3>
+<p>In the results list, some failure modes will not have a <em>PASS</em> or <em>DNP</em>, but instead will have a blank line (<em>____</em>).  These are items that require human inspection to confirm.  The data logs should have all the relevant 
+raw data.  We recommend editing these fields after saving the log file to a file, using the inspectors initials to indicate a Pass.</p>
+<p>No automated test can catch every possible failure mode.  Even for the simplest tests, it is essential that the tester inspect the data logs for discrepancies that the code didn't catch.</p>
+<p>Each data log may be filtered to make them easier to analyze.  Typically they may be filtered to include only messages from specific addresses or specific DGNs.  Consult the document for the specific test on this site.</p>
+<pre><code>      1.096  18EE00D9  ADDRESS_CLAIMED                     0EE00:D9  47 53 DF 0E 33 FF 00 80
+~~NAME=4753DF0E33FF0080  ~~ArbAddrCapable=1  ~~ManufacturerID=118  
+</code></pre>
+<p>The first item in the log is the timestamp for the message.  This is in seconds and milliseconds.  Messages received are timed as they appear on the data bus.  Unfortunately, messages sent by RCT through Omniscope are timed 
+by when they are queued and thus can be off by several milliseconds.  It is for this reason that most time-sensitive tests include a setting for the time error tolerance.</p>
+<p>The full entry is parsed as follows
+* Timestamp.  <em>1.096</em> = 1.096 seconds since the start of the test.
+* Full CAN ID.  <em>18EE00D9</em> = CAN Identifier
+* DGN Name.  <em>ADDRESS_CLAIMED</em>
+* DGN. <em>0EE00</em> = DGN in hexadecimal.
+* Source Address <em>D9</em> = Source Address in hexidecimal
+* Data. <em>47 53 DF 0E 33 FF 00 80</em> = Data packet, in hexidecimal. </p>
+<p>Following the message may be the literal parsing.  The syntax follows the format used in the RV-C Sniffer.  </p>
+<h3 id="aborting-a-test">Aborting a Test</h3>
+<p>If you need to terminate a test prematurely, select <em>Test - Abort</em>.  </p>
+<p>You can select <em>Test - Repeat Last Test</em> to run the same test again.</p>
+<h3 id="troubleshooting-tests">Troubleshooting Tests</h3>
+<p>Tests - especially those involving timing of indeterminant events - don't always fit easily into a simple flowchart.  If a test does not seem to advance as you expect, usually it is because your device is not responding
+as expected.  In which case, congratulations!  You have discovered a new failure mode.  Contact Trillium Electronics and we'll update RCT to incorporate your discovery.</p>
+<p>However, it is possible that the fault lies in RCT, and our failure to fully capture the complexity of the interactions.  If so, contact Trillium Electronics.  Before you do, select <em>Test - Verbose Mode</em> and run the test 
+again.  <strong>Verbose Mode</strong> adds additional information to the test log specifically to facilite debugging.  If the test "hangs", click the <em>Dump Status</em> button before aborting the test.  Send that log, along with a description of your test setup and the problem you are encountering.  Verbose Mode does not
+impact the validity of the test procedure itself.</p>
 <h2 id="staying-up-to-date">Staying Up-to-Date</h2>
+<p>RCT is completely self-contained.  The only file you need to update regularly is the executable itself.</p>
 <h3 id="version-checking">Version Checking</h3>
+<p>By selecting <em>About-Get Version Report</em>, you can get a report in the log box describing the current version levels.</p>
+<pre><code>Program Compiled : Dec  8 2025  09:31:33
+RAC       Read ADDRESS_CLAIM                                          N/A       N/A
+A10       Static Addressing Bootup                                    10-2025   10-31-2025
+A20       Static Addressing - Lower Priority Conflict                 10-2025   10-31-2025
+A30       Static Addressing - Higher Priority Conflict                10-2025   10-31-2025
+. . . 
+</code></pre>
+<p>The program compilation date is relevant only if a significant bug is discovered in RCT itself.  More important are the two dates given for each test.  The first date (e.g. <em>10-1025</em>) is the revision date of the test as
+it appears in the RV-C Test Procedures document. (<a href="https://www.rvia.org/rv-c/rv-c-testing-procedure-document">https://www.rvia.org/rv-c/rv-c-testing-procedure-document</a>)  The second is the revision date of the code in RCT itself.  The RCT code may change either due to a change in 
+the published test or the discovery of a bug in the code.  A change in either of these values suggests that a retest may be in order.</p>
 <h3 id="using-github">Using Github</h3>
+<p>RCT (<em>RVCCompTest.exe</em>) is kept by Trillium Electronics in a public Github repository.  You may choose to automate the updating process using Git, or you may manually check the file date at
+<a href="https://github.com/TrilliumElectronics/RCT_Public">https://github.com/TrilliumElectronics/RCT_Public</a>  </p>
 <h2 id="the-tests">The Tests</h2>
 <h3 id="a-address-claiming">A: Address Claiming</h3>
 <p>Click <a href="A-Series/">here</a> for Address Claiming test documentation.</p>
