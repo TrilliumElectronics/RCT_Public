@@ -49,7 +49,9 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#installing-the-file">Installing the File</a>
+    <li class="toctree-l3"><a class="reference internal" href="#installing-the-files">Installing the Files</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#managing-keys">Managing Keys</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#configuring-omniscope">Configuring Omniscope</a>
     </li>
@@ -113,18 +115,100 @@
               
                 <h1 id="introduction-to-omniscope">Introduction to Omniscope</h1>
 <h2 id="installation">Installation</h2>
-<h3 id="installing-the-file">Installing the File</h3>
+<h3 id="installing-the-files">Installing the Files</h3>
+<p>By default, the installation program installs Omniscope.exe and the supporting files and tools at C:\Omniscope.<br />
+If you want to install it elsewhere, the easiest way is to simply move or rename the Omniscope folder after installation.</p>
+<h3 id="managing-keys">Managing Keys</h3>
+<p>You may install and run Omniscope on as many computers as you wish, but each computer requires a key to connect to any specific RV-C adapter.
+Some Omniscope tools, such as RCT, have their own keys as well.  To run such a tool your computer must contain valid keys for both Omniscope and the tool.</p>
+<p>A key is simply a piece of text, and keys are stored in one or more text files in the Omniscope folder or its subfolders.  Omniscope scans every text file with a name starting
+in "key" and collects the keys they contain.  It ignores duplicates and expired keys.  If you are sharing adapters and tools across multiple computers, you can collect the keys in
+one or more key files and either copy them to each computer, or if the computers are networked, you can put the key files on a shared drive.  In Omniscope, on each computer 
+select Options-Change Key Folder and select the network folder.</p>
+<p><img alt="Screenshot" src="img/change_key_folder.JPG" /></p>
+<p>As old keys expire or you add more tools, you will need to add new keys.  You may do this in one of three ways.</p>
+<ul>
+<li>Directly in Omniscope by selecting Options-Add New Key, and typing or cut-and-pasting the key text.  This adds the key to the "key.txt" file.</li>
+<li>Adding a new key file to the folder.  The filename must start with "key" and use the ".txt" extension.</li>
+<li>Adding the key text to an existing key file.  The text must not have any leading or trailing spaces or tabs.</li>
+</ul>
+<p><img alt="Screenshot" src="img/add_new_key.JPG" /></p>
+<p>All keys are tied to a specific RV-C adapter ID.  The ID should be printed on the adapter, or you can read it through Omniscope by selecting Option-Add New Key.  The ID 
+is an eight-character string.  In the above example, the ID is "FT5TM5WX".</p>
 <h3 id="configuring-omniscope">Configuring Omniscope</h3>
+<p>Most applications do not require any special configuration.  In some cases you may need to access the following settings contained in the Options menu.</p>
+<ul>
+<li>Connection Options<ul>
+<li>Connect on Startup.  </li>
+<li>USB Adapter Type.  The FT and OB series refers to the first two letters of the adapter ID.</li>
+<li>Data Rate.  RV-C runs at 250 kbps.  You can use Omniscope to log data from J1939 and other protocols, some of which run at 500 kbps.</li>
+</ul>
+</li>
+<li>Advanced Options<ul>
+<li>Scan Network.  </li>
+<li>Change Module Base Folder.  This setting allows the tools and support files to be placed in a separate drive or folder than the main program.  This may be useful for networked computers.</li>
+<li>Reset Folders to Defaults.  This resets the several folder settings.</li>
+<li>Change QuickScript file.</li>
+<li>Mute Mode.  The RCT Tool will often disable Omniscope's ability to transmit messages.  The tool should restore the setting at the end of the test, but if it fails you may need to manually restore this setting to "Transmit NormallY"</li>
+<li>Echo Tool Transmissions to Modules.  The RCT Tool may also change this setting according to the requirements of a specific test.  Most tools don't care, but if you want tool activity to show up in data logs, make sure this is enabled.</li>
+<li>Support Legacy DM1s.</li>
+<li>Show Phantom Devices.  This can be necessary when trying to monitor products that are not fully RV-C compliant.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Screenshot" src="img/advanced_options.JPG" /> </p>
+<p>If Omniscope crashes on startup, hold down the Alt key while starting up the program.  This usually happens because the program can't find the adapter.  You may wish to turn off the <em>Connect on Startup</em> setting.</p>
 <h2 id="running-omniscope">Running Omniscope</h2>
 <h3 id="understanding-the-main-window">Understanding the Main Window</h3>
 <p><img alt="Screenshot" src="img/main_window.JPG" /></p>
+<p>There are three windows within the main screen.  At the left is the Device List.  It displays every RV-C device found on the network and its diagnostic status.  Note that a product may
+implement more than one "device" - an <em>inverter/charger</em>, for example, will show up as both an <em>inverter</em> and a <em>charger</em>.</p>
+<p>At the upper right is a window showing more details on whatever device is selected in the Device List.  At lower right is the Module List, a list of tool modules that might be relevant to that device.
+You can also right-click on a device in the Device List and get a shorter list of the primary tool modules for that device.</p>
 <h3 id="running-a-tool">Running a Tool</h3>
+<p>To run a tool module, first select the device that the tool is targeted to.  If you select <em>Service Tool</em>, which is always at address 249, the tool module will target the entire network. 
+Once a device is selected, you may either:</p>
+<ul>
+<li>Double-click on the Device.  This will bring up the default tool module for that device, if one is defined.</li>
+<li>Right-click on the Device and select a tool module from the menu that appears.</li>
+<li>Double-click on a tool module in the Module List.</li>
+<li>Click on "Run Module Not Listed Here" and directly select the executable file.</li>
+<li>Select Modules-Run Unlisted Module or Modules-Run Selected Module.  </li>
+</ul>
+<p>If you try to run a tool module directly through Windows, it generally will either not start or will start and do nothing useful, as it will lack the information from Omniscope necessary to run.</p>
 <h3 id="network-monitor">Network Monitor</h3>
+<p>Selecting Modules-Network Monitor brings up the Network Monitor box.</p>
+<p><img alt="Screenshot" src="img/network_monitor.JPG" /></p>
+<p>This is an excellent tool for monitoring the overall status of the network.  The grid indicates the 256 different source addresses available, and the colored boxes each indicate the node that is using that address.
+At the right are indicators of the overall network traffic and the traffic being generated by the selected node.  At the bottom of the screen are more details about the selected node and a graphic representation
+of the message traffic.  Each vertical bar in the traffic graphic represents a message transmitted by a specific node - the color of the bar matches the color in the grid.  The bars for the selected node are taller 
+than rest of the bars.</p>
+<p>The absolute maximum amount of traffic that an RV-C network can support is a little over 1200 messages per second.  In practice, 700 messages per second is a more realistic boundary - some headroom is necessary to 
+ensure that nodes can transmit messages reliably and process incoming messages without overflowing their queues.</p>
 <h2 id="useful-tools">Useful Tools</h2>
 <h3 id="universal-diagnostic-reader">Universal Diagnostic Reader</h3>
+<p><img alt="Screenshot" src="img/diag_tool.JPG" /></p>
+<p>This is a general-purpose DM_RV reader, comparable to an auto technicians "scanner".</p>
 <h3 id="data-logger">Data Logger</h3>
+<p><img alt="Screenshot" src="img/data_logger.JPG" /></p>
+<p>This data logging tool can be set to log data from specific addresses and/or specific DGNs, highlight certain addresses and/or DGNs, and it allows individual messages to be inspected.  Logs can be saved to a file and played back
+with the Log Player.</p>
 <h3 id="log-playback">Log Playback</h3>
+<p><img alt="Screenshot" src="img/log_player.JPG" /></p>
+<p>The playback tool works with the files created by the data logger.  You can click on a single message to play back that specific message, or if <em>Run</em> is selected, it shall begin playing back the log in sequence.</p>
+<p>The various settings have the following functions:</p>
+<ul>
+<li>Transmit.  If checked, the messages are transmitted by the tool onto the RV-C network.  The messages will be transmitted with the original source addresses, not Omniscope's.</li>
+<li>Sim Receive.  If checked, the messages will be routed to any Omniscope tool modules currently running.  Note that both of these can be checked.</li>
+<li>Run.  If checked, the logged messages will be transmitted sequentially.  If not, only the message clicked will be transmitted.</li>
+<li>Fast.  If checked, the tool will attempt to play back the log at the speed it was taken.  The playback timing is only approximate.  If not checked, the playback will be approximately 10 messages per second.</li>
+<li>Loop.  If checked, the log will be played back in a continuous loop.</li>
+</ul>
 <h3 id="rv-c-sniffer">RV-C Sniffer</h3>
+<p><img alt="Screenshot" src="img/sniffer.JPG" /></p>
+<p>This tool module parses incoming RV-C messages.  Every message from the targeted node is immediately parsed and displayed, allowing troubleshooting in real time.  </p>
+<p>The sniffer is also useful when analyzing logged data.  Use the playback tool with the Sim Receive box checked, and run the sniffer alongside it.</p>
+<p><em>If you have trouble targeting the specific address that you want to sniff, use the Network Monitor, click the grid at the desired address, and click the 'Run Module' button.</em></p>
               
             </div>
           </div><footer>
