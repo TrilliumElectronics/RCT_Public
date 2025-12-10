@@ -69,6 +69,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#aborting-a-test">Aborting a Test</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#saving-the-results">Saving the results</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#troubleshooting-tests">Troubleshooting Tests</a>
     </li>
         </ul>
@@ -90,6 +92,10 @@
         </ul>
     </li>
     </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="filemanagement/">Test File Management</a>
                 </li>
               </ul>
               <ul>
@@ -140,8 +146,8 @@ The data is stored in a text file with the <em>.ocf</em> extension.  The <em>Fil
 a new profile under a new name.</p>
 <p>The contents of the current profile are displayed in the box at the top of the screen.  You may edit values by clicking on the left-down arrow at the right.  Most technical parameters are group by the relevant tests - clicking the 
 down arrow on the left will let you navigate to the test and the items used in that test.  Note that the same setting may apply to multiple tests.  Changing it for one test will change it for all.</p>
-<p>The program does <em>not</em> automatically save the profile information, and some tests will modify data within the profile.  </p>
-<p>Note that the profile data is stored as plain text.  You may take advantage of this to copy, search, or export the data.  </p>
+<p>Note that some tests will modify data within the profile.  </p>
+<p>The profile data is stored as plain text.  You may take advantage of this to copy, search, or export the data.  </p>
 <pre><code>:Program COMPTEST
 :Version 1.0.0
 :Created Friday, November 14, 2025  at 11:51:22
@@ -250,6 +256,9 @@ by when they are queued and thus can be off by several milliseconds.  It is for 
 <h3 id="aborting-a-test">Aborting a Test</h3>
 <p>If you need to terminate a test prematurely, select <em>Test - Abort</em>.  </p>
 <p>You can select <em>Test - Repeat Last Test</em> to run the same test again.</p>
+<h3 id="saving-the-results">Saving the results</h3>
+<p>By selecting <em>Log File - Save Log</em>, you may save the log file to your drive.  We highly recommend that you save the file with the name RCT automatically generates, and save all the test results for a particular product in the same folder.
+This will enable RCT to create an accurate and complete Summary Report.  See <a href="filemanagement/">Test File Management</a>.</p>
 <h3 id="troubleshooting-tests">Troubleshooting Tests</h3>
 <p>Tests - especially those involving timing of indeterminant events - don't always fit easily into a simple flowchart.  If a test does not seem to advance as you expect, usually it is because your device is not responding
 as expected.  In which case, congratulations!  You have discovered a new failure mode.  Contact Trillium Electronics and we'll update RCT to incorporate your discovery.</p>
@@ -282,6 +291,7 @@ the published test or the discovery of a bug in the code.  A change in either of
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../omniscope/" class="btn btn-neutral float-left" title="Omniscope"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="filemanagement/" class="btn btn-neutral float-right" title="Test File Management">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -307,6 +317,8 @@ the published test or the discovery of a bug in the code.  A change in either of
     
       <span><a href="../omniscope/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
+    
+      <span><a href="filemanagement/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

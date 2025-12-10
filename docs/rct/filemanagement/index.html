@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Test File Management - RCT - the RV-C Compatibility Tester</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Test File Management";
+        var mkdocs_page_input_path = "rct\\filemanagement.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../img/Icon.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../omniscope/">Omniscope</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../">RCT</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Test File Management</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#basic-principles">Basic Principles</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#post-test-editing">Post-Test Editing</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="https://www.trilliumelectronics.com">Trillium Electronics</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">RCT - the RV-C Compatibility Tester</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Test File Management</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="managing-test-files">Managing Test Files</h1>
+<p>Managing your test files intelligently will make it easy to take inventory of your products' test results.  RCT is designed to make it easy to manage your results.  The built-in Summary Report is likely the 
+only tool you'll need to track your results.</p>
+<h2 id="basic-principles">Basic Principles</h2>
+<p>By default, when you save a log file after a test, RCT provides a default name that is specifically constructed to make the files easy to manage.  The file name contains the product name (from the profile),
+the test ID, and a date/time code.  The date/time is independent of the actual file date/time, thus allowing you to edit the results file without impacting the Summary Report.</p>
+<p>The Summary Report reads all the results files in a folder.  Therefore we recommend that all log files for a particular product be kept in a single folder.  It is not necessary to create folders for each product or product version.</p>
+<p>After saving the log file, you are expected to edit the file to add the results of your own inspection of the logs.  A code editor is ideal for this, but any plain text editor should be acceptable.  </p>
+<p>You are free to add notes to the file almost anywhere, as long as </p>
+<ul>
+<li>The existing lines are not disturbed.</li>
+<li>Your new lines do not start with '-' or '=', which are used to delimit the sections of the report.</li>
+</ul>
+<p>In general, you should not change any of the values in the first three sections of the file (e.g. <em>Test Profile, Product Version</em>), although you can add your own lines with notes.  </p>
+<h2 id="post-test-editing">Post-Test Editing</h2>
+<p>The fourth section, in which the test results are reported, you are expected to update the results in accordance with the results of the final human inspection of the logs.<br />
+In the following example, two such edits were made:</p>
+<pre><code>--------------------------------------------------------------------------------
+PASS : Request does not use SA FEh                                 
+PASS : Request target is outside the device's dynamic range.       
+PASS : Another message precedes the request.                       
+PASS : The request payload is not 8 bytes.                         
+PASS : The requested DGN is not EE00h.                             
+PASS : A global request for ADDRESS_CLAIM is transmitted.          
+PASS : The device attempts to claim multiple addresses.            
+DNP  : ADDRESS_CLAIM does not match previous claims.
+           Expected = 47 53 FF 0D 33 FF 00 80 , Actual = 47 53 DF 0E 33 FF 00 80
+          1.096  18EE00D9  ADDRESS_CLAIMED                     0EE00:D9  47 53 DF 0E 33 FF 00 80
+PASS : DUT does not change address.                                Address changed.  Initial=218  Final=217
+PASS : Other message broadcast before Requesting new ADDRESS_CLAIM.
+
+DNP  : Less than 250ms elapsed between Requesting ADDRESS_CLAIM and transmitting ADDRESS_CLAIM.
+           Delay = 224 ms
+          1.096  18EE00D9  ADDRESS_CLAIMED                     0EE00:D9  47 53 DF 0E 33 FF 00 80
+IGNORE : Less than 250ms elapsed between transmitting ADDRESS_CLAIM and operational DGNs.
+
+PASS : ADDRESS_CLAIM does not match address requested.             
+PASS : ADDRESS_CLAIM does not match address used in operation.     
+PASS : DUT claims multiple addresses.                              
+OK : Logs have been examined for other possible failure modes.
+--------------------------------------------------------------------------------
+</code></pre>
+<p>In this example, a <em>DNP</em> was replaced by <em>IGNORE</em>, and the blank result for the final test was replaced by <em>OK</em>.  You are free to make up your own codes of up to six letters, and we strongly recommend that you be 
+consistent with them.  To distinguish human judgment from the cold-hearted machine results, the results of a human inspection should not be <em>DNP</em> or <em>PASS</em>.  </p>
+<p>The code must be entered at the start of the line and followed immediately by a colon. </p>
+<h1 id="the-summary-report">The Summary Report</h1>
+<p>To obtain a Summary Report, load the profile for the desired product, select <em>Log File - Build Summary Report</em>, and select the folder containing the test results.  RCT will scan the folder, examining every <em>.txt</em> file.<br />
+If the <em>Product Name</em> and <em>Product Version</em> in the file matches (and the file is a valid results file), RCT will process the file.  Once all the files are read, RCT will output the results for each different test, always
+chosing the most recent file of that particular test.</p>
+<p>Note that the file date to determine which test is most recent is determined by the date encoded in file name.  The date/time reported is determined by the contents of the file.  If you wish to "promote" a particular log
+file to the top, edit the file name, changing the time code (e.g. <em>2604011200</em>) to today's date.</p>
+<p>The results are displayed in the log and may be saved be selecting <em>Log File - Save Log</em>, or copied to the clipboard.</p>
+<h2 id="interpreting-the-report">Interpreting the Report</h2>
+<p>Here is a sample report.</p>
+<pre><code>--------------------------------------------------------------------------------
+Product              : RG150  1.03
+Report Date/Time     : Wednesday, December 10, 2025  11:53:48
+RCT Compile          : Dec 10 2025
+--------------------------------------------------------------------------------
+A40 Dynamic Addressing Bootup
+     Spec Version: [10-2025]   Code Version: 11-04-2025    
+     Tuesday, December 09, 2025  15:37:01 (9912091536) 
+     DNP  :  0    ____ :  1    PASS :  7    
+A90 Dynamic Addressing Subsequent Conflict (High Priority)
+     Spec Version: [9-2025]   Code Version: 10-13-2025                !!!  Current:  10-2025   11-13-2025  !!!
+     Monday, December 08, 2025  10:11:01 (2512081010) 
+     DNP  :  2    ____ :  0    PASS : 12    IGNORE :  1  OK :  1  
+--------------------------------------------------------------------------------
+</code></pre>
+<p>Two tests have been run on this product, each several times.  Test <em>A40</em> has one open "____" result - likely the <em>Logs have been examined for other possible failure modes.</em> line.  Test A90 has two <em>DNP</em> results and two
+user-created codes - <em>IGNORE</em> and <em>OK</em>.  This matches the results in the report excerpted above.</p>
+<p>A90 also is marked as an obsolete test.  The <em>!!!</em> marks indicate that the test was written to an obsolete version of the RVIA document and the code itself is not the latest.  The current version of the specification and code
+is indicated between the <em>!!!</em> marks.  Note that these values assume that the RCT program itself is up-to-date.  The <em>RCT Compile</em> value above is a reliable indicator of how current RCT is.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../" class="btn btn-neutral float-left" title="RCT"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>2025 Trillium Electronics Inc.</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
