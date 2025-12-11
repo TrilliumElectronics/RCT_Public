@@ -67,6 +67,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#inspecting-the-data">Inspecting the Data</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#editing-the-test-log">Editing the Test Log</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#aborting-a-test">Aborting a Test</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#saving-the-results">Saving the results</a>
@@ -253,6 +255,11 @@ by when they are queued and thus can be off by several milliseconds.  It is for 
 * Source Address <em>D9</em> = Source Address in hexidecimal
 * Data. <em>47 53 DF 0E 33 FF 00 80</em> = Data packet, in hexidecimal. </p>
 <p>Following the message may be the literal parsing.  The syntax follows the format used in the RV-C Sniffer.  </p>
+<h3 id="editing-the-test-log">Editing the Test Log</h3>
+<p>After the test is complete, the data log may be edited.</p>
+<p>This is a crucial step, allowing the addition of explanatory notes and the manual entry of test results.  Some failure modes cannot be fully evaluated automatically and are indicated in the log with a "____" result.
+These blanks should be filled in manually.  For clarity, the manual codes should be distinct from the automatic codes of <em>DNP</em> and <em>PASS</em>.  </p>
+<p>For more information, click <a href="A-Series/">here</a>.</p>
 <h3 id="aborting-a-test">Aborting a Test</h3>
 <p>If you need to terminate a test prematurely, select <em>Test - Abort</em>.  </p>
 <p>You can select <em>Test - Repeat Last Test</em> to run the same test again.</p>
