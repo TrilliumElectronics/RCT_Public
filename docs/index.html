@@ -55,11 +55,11 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#how-the-rvia-writes-tests">How the RVIA Writes Tests</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#how-to-use-the-rvia-tests">How to Use the RVIA Tests</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#using-rct-and-the-rvia-forms">Using RCT and the RVIA Forms</a>
+    <li class="toctree-l3"><a class="reference internal" href="#rct-and-the-rvia-forms">RCT and the RVIA Forms</a>
     </li>
         </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-to-perform-a-test">How to Perform a test</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#your-resposibilities">Your Resposibilities</a>
         <ul>
@@ -117,17 +117,165 @@
               
                 <h1 id="welcome-to-rct-the-rv-c-compatibility-tester">Welcome to RCT - the RV-C Compatibility Tester</h1>
 <h2 id="what-is-rct-for">What is RCT For?</h2>
+<p>RCT is for designers and manufacturers of RV-C components to ensure that their products are compatible with other RV-C components.</p>
 <h3 id="the-importance-of-compatibility-testing">The Importance of Compatibility Testing</h3>
+<p>RV-C is a complex protocols and implementing it successfully requires both perfect understanding of the protocol intent and perfect accuracy in your code.<br />
+Mistakes can do more than impair your own product - they can take down the entire network.  Your product can work 100% reliably in your lab - but that doesn't guarantee anything about how it works in a real RV.  </p>
+<p>Proper testing requires using reference devices built on an independent platform - not your own.  And tests should have three key properties.</p>
+<ul>
+<li>Tests should be designed with a "hacker's mentality", attacking potential weaknesses rather than demonstrating strengths.</li>
+<li>The collection of tests should cover all possible incompatibilities.</li>
+<li>The tests should be repeatable, tester-independent, and produce a readable report.</li>
+</ul>
+<p>Just putting the product in an RV and running it for a while isn't enough.  If in the course of your testing your engineers are praying that it works - that isn't really testing.  In a real test, your test engineer 
+should be aiming to make it fail and be just a little bit peeved when he doesn't break it.</p>
 <h3 id="why-use-an-automated-tool">Why Use an Automated Tool</h3>
+<p>Let's see how RCT lines up with the requirements of a proper testing regimen.</p>
+<ul>
+<li><strong>Hacker's Mentality</strong>  - RCT is written to be an attack dog. </li>
+<li><strong>Complete Coverage</strong> - RCT covers 100% if the operations and failure modes listed in the official RVIA procedures.</li>
+<li><strong>Repeatable</strong> - RCT tests can be repeated reliably and with precision timing.</li>
+<li><strong>Tester-Independent</strong> - RCT doesn't rely on the test engineer to do anything but follow simple instructions.</li>
+<li><strong>Readable Reports</strong> - At the end of the process, RCT provides full reports - including not just the pass/fail results but detailed data logs.</li>
+</ul>
+<p>RCT even provides a summary report that consolidates all the results for a device in a single document.</p>
+<p>But RCT's biggest benefit - it's <strong>fast</strong>.  Most tests take just seconds and are so simple to execute, anyone can run them.  </p>
 <h2 id="the-rvia-tests">The RVIA Tests</h2>
+<p>RCT is based on the official RV-C Test Procedures, published by the RVIA (<a href="https://www.rvia.org/rv-c/rv-c-testing-procedure-document">https://www.rvia.org/rv-c/rv-c-testing-procedure-document</a>) </p>
 <h3 id="how-the-rvia-writes-tests">How the RVIA Writes Tests</h3>
-<h3 id="how-to-use-the-rvia-tests">How to Use the RVIA Tests</h3>
-<h3 id="using-rct-and-the-rvia-forms">Using RCT and the RVIA Forms</h3>
+<p>The tests are written by a special subcommittee of the RV-C Technical Committee.  This committee consists of vendors and OEMS with an interest in the reliability of RV-C networks.  If you wish
+to join this important committee, contact the RVIA.  </p>
+<p>The document is updated regularly, and updates can be tracked at <a href="https://www.rvia.org/rv-c">https://www.rvia.org/rv-c</a>.  You do not have to be a member of the committee to propose additions or amendments.  More information on the process
+is here <a href="https://www.rvia.org/rv-c/guide-rv-c-amendment-process">https://www.rvia.org/rv-c/guide-rv-c-amendment-process</a>.</p>
+<h3 id="rct-and-the-rvia-forms">RCT and the RVIA Forms</h3>
+<p>Here is a section from the Testing Procedures document.</p>
+<p><img alt="Test Sample" src="img/RVIATestPage.JPG" /></p>
+<p>Here is the output from a specific RCT test.</p>
+<pre><code>================================================================================
+Starting Test : A40  10-2025   Dynamic Addressing Bootup
+Setting Omniscope to Tools
+Start with an empty network, DUT powered off or disconnected.
+Power Up DUT
+Test A40 complete.
+================================================================================
+External testing cannot detect all possible bugs and failures.
+The results of this test shall not be interpreted as a certification or endorsement by any party.
+Passing these tests is not an absolute guarantee of RV-C compatibility or interoperability with other RV-C devices.
+================================================================================
+Test                 : A40      [10-2025]  Dynamic Addressing Bootup
+Code Version         : Revised 11-04-2025              Compiled Dec 15 2025
+Test Date/Time       : Monday, December 15, 2025  11:25:03
+Test Profile         : C:\Temp\TestProfile_3.ocf
+Company              : Rabblefish LLC
+Product Name         : RG150
+Product Version      : 1.03
+Tested By            : Martin Perlot
+Testing Notes        : Tested on prototype hardware.
+DSA Category                   = Appliances and Bridges
+--------------------------------------------------------------------------------
+PASS : Request does not use SA FEh                                 
+PASS : Request target is outside the device's dynamic range.       
+PASS : Another message precedes the request.                       
+PASS : The request payload is not 8 bytes.                         
+PASS : The requested DGN is not EE00h.                             
+PASS : A global request for ADDRESS_CLAIM is transmitted.          
+PASS : The device attempts to claim multiple addresses.            
+____ : Logs have been examined for other possible failure modes.
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Log size : 3 msgs
+      6.144  18EAD9FE  REQUEST [D9]                        0EAD9:FE  00 EE 00 FF FF FF FF FF
+~~DGNRequest [217]=EE00  
+      6.243  18EE00D9  ADDRESS_CLAIMED                     0EE00:D9  47 53 DF 0E 33 FF 00 80
+      6.993  19FDE6D9  CAN_BUS_STS                         1FDE6:D9  04 FF FF FF FF 10 F1 FF
+--------------------------------------------------------------------------------
+</code></pre>
+<p>and here is a Summary Report showing a product's progress through the testing regimen.</p>
+<pre><code>--------------------------------------------------------------------------------
+Product              : RG150  1.03
+Report Date/Time     : Monday, December 15, 2025  11:55:56
+RCT Compile          : Dec 15 2025
+--------------------------------------------------------------------------------
+A10 Static Addressing Bootup    SKIPPED!!!
+     Device Not Designed to Pass
+A20 Static Addressing - Lower Priority Conflict    SKIPPED!!!
+     Device Not Required by OEM to Pass
+A40 Dynamic Addressing Bootup
+     Spec Version: [10-2025]   Code Version: 11-04-2025    
+     Monday, December 15, 2025  11:25:03 (2512151124) 
+     Tested on prototype hardware.
+     DNP  :  0    ____ :  1    PASS :  7    
+A50 Dynamic Addressing Startup Conflict (High Priority)    SKIPPED!!!
+     Waiting for New Software
+A90 Dynamic Addressing Subsequent Conflict (High Priority)
+     Spec Version: [9-2025]   Code Version: 10-13-2025                !!!  Current:  10-2025   11-13-2025  !!!
+     Monday, December 08, 2025  10:11:01 (2512081010) 
+     DNP  :  2    ____ :  0    PASS : 12    IGNORE :  1  OK :  1  
+--------------------------------------------------------------------------------
+A10       Skipped: Device Not Designed to Pass
+A20       Skipped: Device Not Required by OEM to Pass
+A40     DNP  :  0    ____ :  1    PASS :  7    
+A50       Skipped: Waiting for New Software
+A90     DNP  :  2    ____ :  0    PASS : 12    IGNORE :  1  OK :  1  
+--------------------------------------------------------------------------------
+</code></pre>
+<p>The Summary Report is designed to correlate closely to the RVIA document - the primary difference is that it does not attempt to describe the test procedure, only the results.  We expect that most customers will 
+be satisfied to see this report, but if not, the text can be cut-and-pasted into the RVIA's PDF file.</p>
+<h2 id="how-to-perform-a-test">How to Perform a test</h2>
+<p>It couldn't be much easier.  The first step is to create a <em>profile</em> to describe the product - its name and version, the company and tester.  Then, for any particular test there may be details that need to be defined.  For example,
+some address-claiming tests must know the product's Manufacturer ID to verify the ADDRESS_CLAIMED data is correct.  Then running a test is (usually) just a matter of having Omniscope and the DUT (<em>Device Under Test</em>) connected on a 
+network and selecting the test from the menu.  RCT provides instructions as the test proceeds.</p>
+<p>The first section in the test log shows the process step-by-step.</p>
+<pre><code>================================================================================
+Starting Test : A40  10-2025   Dynamic Addressing Bootup
+Setting Omniscope to Tools
+Start with an empty network, DUT powered off or disconnected.
+Power Up DUT
+Test A40 complete.
+================================================================================
+</code></pre>
+<p>In this example, the tester selected <em>Test - A-Addressing - A40: Dynamic Addressing Bootup</em>.  RCT responded by clearing the logging area and typing:</p>
+<pre><code>================================================================================
+Starting Test : A40  10-2025   Dynamic Addressing Bootup
+Setting Omniscope to Tools
+Start with an empty network, DUT powered off or disconnected.
+</code></pre>
+<p>At this point, RCT waits until is sees that the network is completely empty.  Once the network is clear, it continues, typing:</p>
+<pre><code>Power Up DUT
+</code></pre>
+<p>At this point, RCT waits until you connect the device or power it up.  In this particular test, it will process for a few seconds and then report:</p>
+<pre><code>Test A40 complete.
+================================================================================
+</code></pre>
+<p>It then generates the rest of the report.  The report includes</p>
+<ul>
+<li>The interactive log created during the test.</li>
+<li>An important reminder that no test can root out every possible failure.</li>
+<li>All the profile data used in the test, plus a spot to add your own notes.</li>
+<li>The list of failure modes.  For each mode, one of three results are possible.  In most cases a reference to the data log is provided.<ul>
+<li>DNP - Do Not Pass.  RCT has detected a failure.</li>
+<li>PASS - Pass.  RCT has determined that the product has avoided that failure.</li>
+<li>___ - Contingent on User Inspection.  Some failures cannot be fully evaluated automatically.  The tester is required to analyze the log to evaluate success.</li>
+</ul>
+</li>
+<li>The data log(s).  This may show all the activity on the network, or may be filtered to specific devices or DGNs.  Each message is timestamped and important messages are parsed for easy interpretation.</li>
+</ul>
+<p>The final step is to edit the log, replacing the <em>____</em> values with appropriate codes and entering any desired notes.  Most tests take just a few seconds to perform and a little longer to evaluate.</p>
 <h2 id="your-resposibilities">Your Resposibilities</h2>
+<p>No test regimen is perfect, but with your help we can continuously improve the RV-C specification and the RCT program.</p>
 <h3 id="keep-your-eyes-open">Keep Your Eyes Open</h3>
+<p>RCT has one significant problem - it's too fast and easy!  It is so fast, it's easy to get complacent and miss seeing the occasional quirk or detail.  Sometimes your product will pass a test just because it 
+was lucky - this is especially true with any tests involving timing.  We recommend running every test at least a couple times and to not consider a test passed unless all failures you detected along the way have
+been explained.  </p>
 <h3 id="help-perfect-the-specification">Help Perfect the Specification</h3>
+<p>It may be the case that your product passes every test in RCT and still fails in the field.  The RVIA tests are written by humans whose imaginations are not infinite - you can't expect them to think of every 
+possible failure mode or problematic interaction between products.  When you discover such a failure, do yourself and the industry a favor and let us know.  If you can describe the failure, and ideally, how to 
+make that failure appear reliably - together we can devise a test to eliminate it.</p>
 <h3 id="help-perfect-the-tool">Help Perfect the Tool</h3>
+<p>RCT was also written by humans and it may have bugs in it as well.  Please report even the most trivial bugs - behind what seems a minor glitch might be a fatal error.  </p>
 <h2 id="who-to-contact">Who to Contact</h2>
+<p>To report issues with the RCT package, e-mail tech@trilliumelectronics.com.  If the problem is with a specific test, run the test in Verbose mode and include the log with your e-mail.</p>
+<p>To report issues with the RV-C specification, e-mail RV-C-Administrator@rvia.org, and copy  tech@trilliumelectronics.com.</p>
               
             </div>
           </div><footer>
@@ -177,5 +325,5 @@
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-12-11 20:56:09.013732+00:00
+Build Date UTC : 2025-12-15 20:44:50.840698+00:00
 -->

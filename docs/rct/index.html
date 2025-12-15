@@ -71,7 +71,9 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#aborting-a-test">Aborting a Test</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#saving-the-results">Saving the results</a>
+    <li class="toctree-l3"><a class="reference internal" href="#saving-the-results">Saving the Results</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#skipping-a-test">Skipping a Test</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#troubleshooting-tests">Troubleshooting Tests</a>
     </li>
@@ -203,6 +205,7 @@ Company              : Rabblefish LLC
 Product Name         : RG150
 Product Version      : 1.03
 Tested By            : Martin Perlot
+Testing Notes        : 
 DSA Category                   = Appliances and Bridges
 </code></pre>
 <ul>
@@ -263,9 +266,32 @@ These blanks should be filled in manually.  For clarity, the manual codes should
 <h3 id="aborting-a-test">Aborting a Test</h3>
 <p>If you need to terminate a test prematurely, select <em>Test - Abort</em>.  </p>
 <p>You can select <em>Test - Repeat Last Test</em> to run the same test again.</p>
-<h3 id="saving-the-results">Saving the results</h3>
+<h3 id="saving-the-results">Saving the Results</h3>
 <p>By selecting <em>Log File - Save Log</em>, you may save the log file to your drive.  We highly recommend that you save the file with the name RCT automatically generates, and save all the test results for a particular product in the same folder.
 This will enable RCT to create an accurate and complete Summary Report.  See <a href="filemanagement/">Test File Management</a>.</p>
+<h3 id="skipping-a-test">Skipping a Test</h3>
+<p>There are several reasons why you may wish to skip a test.  The test may not apply to your specific product - e.g. the Static Addressing tests do not apply to Dynamically Addressed products.  The test may not be required for 
+the target application as defined by the OEM.  Or your organization may have other reasons to delay testing.  You can easily document the decision by selecting <em>Test - Log a Skipped Test</em>.  You can select the test and the 
+justification and RCT will generate a log file.  You may edit the justification in the log file before saving the file to your drive.</p>
+<p>The test log will look something like this:</p>
+<pre><code>================================================================================
+================================================================================
+================================================================================
+Test                 : A10      [10-2025]  Static Addressing Bootup    SKIPPED!!!
+Code Version         : Revised 10-31-2025              Compiled Dec 15 2025
+Test Date/Time       : Monday, December 15, 2025  11:15:01
+Test Profile         : C:\Temp\TestProfile_3.ocf
+Company              : Rabblefish LLC
+Product Name         : RG150
+Product Version      : 1.03
+Tested By            : Martin Perlot
+Testing Notes        : 
+Reason Skipped       : Device Not Designed to Pass
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+</code></pre>
+<p>Do not edit the section markers - the Summary Report creator uses them to identify the different sections in the standard report.  You may edit the <em>Reason Skipped</em>, which will appear in the Summary Report.</p>
+<p>Remember to save the log file.</p>
 <h3 id="troubleshooting-tests">Troubleshooting Tests</h3>
 <p>Tests - especially those involving timing of indeterminant events - don't always fit easily into a simple flowchart.  If a test does not seem to advance as you expect, usually it is because your device is not responding
 as expected.  In which case, congratulations!  You have discovered a new failure mode.  Contact Trillium Electronics and we'll update RCT to incorporate your discovery.</p>

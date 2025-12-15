@@ -57,7 +57,9 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#basic-principles">Basic Principles</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#post-test-editing">Post-Test Editing</a>
+    <li class="toctree-l2"><a class="reference internal" href="#testing-notes">Testing Notes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#editing-the-test-results">Editing the Test Results</a>
     </li>
     </ul>
                 </li>
@@ -104,8 +106,26 @@ it in RCT (use <em>Log File - Read Log File</em>).  You can also use almost any 
 <li>The existing lines are not disturbed.</li>
 <li>Your new lines do not start with '-' or '=', which are used to delimit the sections of the report.</li>
 </ul>
-<p>In general, you should not change any of the values in the first three sections of the file (e.g. <em>Test Profile, Product Version</em>), although you can add your own lines with notes.  </p>
-<h2 id="post-test-editing">Post-Test Editing</h2>
+<p>In general, you should not change any of the values in the first two sections of the file, and be careful in editing the third section (e.g. <em>Test Profile, Product Version</em>).</p>
+<h2 id="testing-notes">Testing Notes</h2>
+<p>Within the third section is one special item - <em>Testing Notes</em> - which is intended to allow the tester to add explanatory information which will appear in the Summary Report.  You can leave the field blank or
+delete it if you don't want any extra text added to the report.</p>
+<pre><code>================================================================================
+Test                 : A40      [10-2025]  Dynamic Addressing Bootup
+Code Version         : Revised 11-04-2025              Compiled Dec 15 2025
+Test Date/Time       : Monday, December 15, 2025  11:25:03
+Test Profile         : C:\Temp\TestProfile_3.ocf
+Company              : Rabblefish LLC
+Product Name         : RG150
+Product Version      : 1.03
+Tested By            : Martin Perlot
+Testing Notes        : Tested on prototype hardware.
+DSA Category                   = Appliances and Bridges
+    This text will not show up in the Summary Report.  You can use notes like this almost anywhere in the log.  
+    You may wish to add notes like these to the Data Log section, marking important messages.
+--------------------------------------------------------------------------------
+</code></pre>
+<h2 id="editing-the-test-results">Editing the Test Results</h2>
 <p>The fourth section, in which the test results are reported, you are expected to update the results in accordance with the results of the final human inspection of the logs.<br />
 In the following example, two such edits were made:</p>
 <pre><code>--------------------------------------------------------------------------------
@@ -147,23 +167,45 @@ file to the top, edit the file name, changing the time code (e.g. <em>2604011200
 <p>Here is a sample report.</p>
 <pre><code>--------------------------------------------------------------------------------
 Product              : RG150  1.03
-Report Date/Time     : Wednesday, December 10, 2025  11:53:48
-RCT Compile          : Dec 10 2025
+Report Date/Time     : Monday, December 15, 2025  11:36:34
+RCT Compile          : Dec 15 2025
 --------------------------------------------------------------------------------
+Product              : RG150  1.03
+Report Date/Time     : Monday, December 15, 2025  11:55:56
+RCT Compile          : Dec 15 2025
+--------------------------------------------------------------------------------
+A10 Static Addressing Bootup    SKIPPED!!!
+     Device Not Designed to Pass
+A20 Static Addressing - Lower Priority Conflict    SKIPPED!!!
+     Device Not Required by OEM to Pass
 A40 Dynamic Addressing Bootup
      Spec Version: [10-2025]   Code Version: 11-04-2025    
-     Tuesday, December 09, 2025  15:37:01 (9912091536) 
+     Monday, December 15, 2025  11:25:03 (2512151124) 
+     Tested on prototype hardware.
      DNP  :  0    ____ :  1    PASS :  7    
+A50 Dynamic Addressing Startup Conflict (High Priority)    SKIPPED!!!
+     Waiting for New Software
 A90 Dynamic Addressing Subsequent Conflict (High Priority)
      Spec Version: [9-2025]   Code Version: 10-13-2025                !!!  Current:  10-2025   11-13-2025  !!!
      Monday, December 08, 2025  10:11:01 (2512081010) 
      DNP  :  2    ____ :  0    PASS : 12    IGNORE :  1  OK :  1  
 --------------------------------------------------------------------------------
+A10       Skipped: Device Not Designed to Pass
+A20       Skipped: Device Not Required by OEM to Pass
+A40     DNP  :  0    ____ :  1    PASS :  7    
+A50       Skipped: Waiting for New Software
+A90     DNP  :  2    ____ :  0    PASS : 12    IGNORE :  1  OK :  1  
+--------------------------------------------------------------------------------
 </code></pre>
 <p>Two tests have been run on this product, each several times.  Test <em>A40</em> has one open "____" result - likely the <em>Logs have been examined for other possible failure modes.</em> line.  Test A90 has two <em>DNP</em> results and two
 user-created codes - <em>IGNORE</em> and <em>OK</em>.  This matches the results in the report excerpted above.</p>
+<p>Test A40 has one test with a blank status.  The testes also entered a Testing Note, "Tested on prototype hardware.", perhaps to explain the omission.</p>
 <p>A90 also is marked as an obsolete test.  The <em>!!!</em> marks indicate that the test was written to an obsolete version of the RVIA document and the code itself is not the latest.  The current version of the specification and code
 is indicated between the <em>!!!</em> marks.  Note that these values assume that the RCT program itself is up-to-date.  The <em>RCT Compile</em> value above is a reliable indicator of how current RCT is.</p>
+<p>Three tests have been skipped.  </p>
+<h2 id="cleaning-the-drive">Cleaning the Drive</h2>
+<p>The Summary Report automatically ignores test logs that have been superseded by newer tests.  However, your folders can get cluttered with old tests.  RCT can remove all obsolete test results in a folder.<br />
+Select <em>Log File - Delete Superseded Test Results</em>, and select the folder containing the tests.  RCT will delete any test files that have been superseded by more recent file, <em>for the current product and version</em>.</p>
               
             </div>
           </div><footer>
