@@ -109,7 +109,7 @@ it in RCT (use <em>Log File - Read Log File</em>).  You can also use almost any 
 <p>In general, you should not change any of the values in the first two sections of the file, and be careful in editing the third section (e.g. <em>Test Profile, Product Version</em>).</p>
 <h2 id="testing-notes">Testing Notes</h2>
 <p>Within the third section is one special item - <em>Testing Notes</em> - which is intended to allow the tester to add explanatory information which will appear in the Summary Report.  You can leave the field blank or
-delete it if you don't want any extra text added to the report.</p>
+delete it if you don't want any extra text added to the report.  You can create multiple lines of notes by duplicating the <em>Testing Notes        :</em> tag.</p>
 <pre><code>================================================================================
 Test                 : A40      [10-2025]  Dynamic Addressing Bootup
 Code Version         : Revised 11-04-2025              Compiled Dec 15 2025
@@ -120,6 +120,7 @@ Product Name         : RG150
 Product Version      : 1.03
 Tested By            : Martin Perlot
 Testing Notes        : Tested on prototype hardware.
+Testing Notes        : Test again when the new hardware arrives.
 DSA Category                   = Appliances and Bridges
     This text will not show up in the Summary Report.  You can use notes like this almost anywhere in the log.  
     You may wish to add notes like these to the Data Log section, marking important messages.

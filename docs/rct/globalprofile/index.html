@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>A - Address Claiming - RCT - the RV-C Compatibility Tester</title>
+    <title>Global Profile - RCT - the RV-C Compatibility Tester</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "A - Address Claiming";
-        var mkdocs_page_input_path = "rct\\A-Series.md";
+        var mkdocs_page_name = "Global Profile";
+        var mkdocs_page_input_path = "rct\\globalprofile.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -74,7 +74,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">A - Address Claiming</li>
+      <li class="breadcrumb-item active">Global Profile</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -83,24 +83,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="a-address-claiming">A - Address Claiming</h1>
+                <h1 id="global-profile">Global Profile</h1>
 <p>The values in parentheses are the default values provided by RCT.</p>
-<h2 id="settings">Settings</h2>
-<p>These settings are common to most tests, static and dynamic.</p>
+<h2 id="test-management-settings">Test Management Settings</h2>
+<p>These settings are intended to simplify test management.  They do not affect how the tests are run or their results.  The items marked with an *asterisk are used in organizing the Summary Report.</p>
 <ul>
-<li>Manufacturer ID.  This is the value used in the ADDRESS_CLAIMED message.  A unique value is absolutely mandatory for all manufacturers.</li>
-<li>Full ADDRESS_CLAIM Value.  This can be read directly from the DUT by running the <em>Read ADDRESS_CLAIM from DUT</em> "test".</li>
+<li>Company</li>
+<li>*Product Name</li>
+<li>*Product Version.  No particular format is required.</li>
+<li>Tested By</li>
 </ul>
-<h2 id="static-addressing-tests">Static Addressing Tests</h2>
-<p>Most products will be required to perform either the Static Addressing or Dynamic Addressing tests.  The static addressing tests (A-10 to A-30) are straightforward.</p>
-<h2 id="dynamic-addressing-tests">Dynamic Addressing Tests</h2>
+<h2 id="global-test-parameters">Global Test Parameters</h2>
+<p>These settings apply to many different tests.</p>
 <ul>
-<li>DSA Category.  The category from Table 7.2 in the RV-C specification.</li>
-<li>Identifying DGN.  RCT needs to be able to find the DUT on the network after claiming is complete.  Pick a status DGN that the device transmits frequently automatically.  The value is in hexadecimal (e.g. WATERHEATER_STATUS -&gt; 1FFF7).</li>
-<li>Identifying Instance.  Used in combination with the <em>Identifying DGN</em> to find the DUT.  If the DGN does not have an Instance field, enter <em>FF</em>.</li>
-<li>Perform Extended Test A-100 (No).  Test A-100 only requires the device to claim addresses beyond its DSA category range.  It does not test whether the DUT will correctly roll over if it reaches address zero.  Setting this to <em>Yes</em> will extend A-100 to catch the zero-rollover case.</li>
-<li>Extended Test Target Address (248).  If <em>Perform Extended Test A-100</em> is <em>Yes</em>, this is the final address that RCT will force the device to reach.  Depending on how the device chooses a startup address, you may need to change this with each test to ensure that it is <em>higher</em> than the device's starting address.</li>
+<li>250MS Timing Tolerance (10 ms).  All tests requiring an event within (or after) 250ms is allowed this much error.</li>
 </ul>
+<h2 id="miscellaneous-settings">Miscellaneous Settings</h2>
+<p>Most users, most of the time, will leave these settings at their default values. </p>
+<ul>
+<li>Clear Text Log at Start (Yes).  You may wish to turn this off when you are continuously repeating a test, so you can compare the results easily.</li>
+<li>Restore Omniscope Mute/Echo Modes After Test (Yes).  If you are running Omniscope tools other than RCT at the same time, you may need to manually control these Omniscope settings.</li>
+</ul>
+<h1 id="profile-storage">Profile Storage</h1>
+<p>The <em>.ocf</em> file is an ordinary text file which stores the profile settings in key-value pairs.  Here is an abbreviated example:</p>
+<pre><code>:Program COMPTEST
+:Version 1.0.0
+:Created Monday, December 08, 2025  at 08:45:27
+:SET Company=Rabblefish LLC
+:SET Product Name=RG150
+:SET Product Version=1.03
+:SET Tested By=Martin Perlot
+:SET Clear Text Log at Start=Yes
+:SET Restore Omniscope Mute/Echo Modes After Test=Yes
+:SET 250MS Timing Tolerance=10 ms
+:SET DSA For Address Claiming=253
+:SET Manufacturer ID=111
+:SET Full ADDRESS_CLAIM Value=47 53 FF 0D 33 FF 00 80
+:SET DSA Category=Appliances and Bridges
+:SET Identifying DGN=0001FDE6
+:SET Identifying Instance=255
+:SET Perform Extended Test A-100=Yes
+:SET Extended Test Target Address=220
+</code></pre>
+<p>You may edit the file directly using any code or pure text editor.  Take care to preserve the <em>Program COMPTEST</em> line at the top and the <em>:SET</em> prefixes.  Any line that does not start with <em>SET</em> will be ignored.</p>
               
             </div>
           </div><footer>
