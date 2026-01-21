@@ -1,0 +1,9 @@
+Description = RCT (RV-C Compatibility Tester)
+File = RVCCompTest.exe
+Address = 00h-FFh
+DefAddress = 0-255
+Default=0
+RightClick=1
+EOF
+Created 1/21/26 MSP
+

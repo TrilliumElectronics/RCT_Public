@@ -1,0 +1,9 @@
+Description = RVC Sniffer
+File = RVCSniffer.exe
+Address = 00h-FFh
+DefAddress = 0-255
+Default=0
+RightClick=1
+EOF
+Created 7/25/21 MSP
+
