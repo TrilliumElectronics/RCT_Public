@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>A - Network Integrity and Diagnostics - RCT - the RV-C Compatibility Tester</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "A - Network Integrity and Diagnostics";
+        var mkdocs_page_input_path = "rct\\ND-Series.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../img/Icon.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../omniscope/">Omniscope</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../">RCT</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../filemanagement/">Test File Management</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="https://www.trilliumelectronics.com">Trillium Electronics</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">RCT - the RV-C Compatibility Tester</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">A - Network Integrity and Diagnostics</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="a-network-integrity-and-diagnostics">A - Network Integrity and Diagnostics</h1>
+<p>The values in parentheses are the default values provided by RCT.</p>
+<p>Many tests begin by searching for the DUT address.  This requires two settings to be correct.
+* Identifying DGN.  Pick a status DGN that the device transmits frequently automatically.  The value is in hexadecimal (e.g. WATERHEATER_STATUS -&gt; 1FFF7).
+* Identifying Instance.  Used in combination with the <em>Identifying DGN</em> to find the DUT.  If the DGN does not have an Instance field, enter <em>FF</em>.</p>
+<h2 id="dgn-request-tests">DGN Request tests</h2>
+<p>Tests ND-10 through ND-30 require the following settings.</p>
+<ul>
+<li>Unsupported DGN 1</li>
+<li>Unsupported DGN 2</li>
+<li>Unsupported DGN 3 - These three DGNs should be valid status DGNs, all different, and all not supported by the DUT.  The default DGNs are LOCK_STATUS, FLOOR_HEAT_STATUS, and VEHICLE_SEAT_STATUS.</li>
+<li>Supported DGN 1</li>
+<li>Supported DGN 2</li>
+<li>Supported DGN 3 - These three DGNs should be items supported by the DUT.  If the device does not support three distinct DGNs, it is acceptable to use the same DGN more than once.</li>
+</ul>
+<p>RCT cannot distinguish between messages sent in response to a request and messages sent on their normal operating schedule.  Therefore:
+* When selecting DGNs, avoid DGNs that are broadcast frequently.<br />
+* Certain tests require manual analysis of the test report.  RCT cannot reliably determine when a "wrong DGN" is broadcast or when multiple responses are required.</p>
+<p>Note that the official tests do not use the Instance field.  Support for the Instance field is not specifically required - the field was added to the RV-C specification relatively late.<br />
+The unofficial Instanced test uses <em>Supported DGN 1</em>.  It monitors the DUT briefly to determine which instances to use in the test.</p>
+<h2 id="product-id">Product ID</h2>
+<p>Test ND-40 does not require any particular settings.  Note that the test does not specifically check that the contents of the Product ID are useful.  Failing to put useful data in the fundamental identification DGN 
+requires a level of stupidity that the authors of these tests do not wish to contemplate could exist.</p>
+<h2 id="dm_rv-tests">DM_RV Tests</h2>
+<p>Tests ND-50 through ND-70 require </p>
+<ul>
+<li>DSAs Reported.  This is a string of codes, per the <a href="./#DSA Abbreviations">table</a> below. </li>
+<li>Statically Addressed.  Set to Yes if the device uses its DSA as its SA.</li>
+</ul>
+<p>Note that RCT does not check whether the DSA list is actually correct.  The <em>DSA does not match device function.</em> failure must be checked by the user.</p>
+<p>For the five second and one second timing intervals, a 20% tolerance is allowed.</p>
+<p>To determine whether the broadcasts are appropriately staggered, RCT checks the data traffic using the following definition of <a href="./#How RCT Evaluates Burstiness">burstiness</a> : </p>
+<ul>
+<li>If the number of DSAs supported is &lt;3, the time window is 250ms (adjusted) and the expection is no more than a 5% chance that 2 messages will be sent in that window.</li>
+<li>If the number of DSAs supported is 3+, the window is multiplied by <em>4/(d+2)</em>, with the same probability expectation.</li>
+</ul>
+<p>Although only ND-50 (No Faults test) requires the gap test, the same data is included in the ND-60 test as well.</p>
+<h1 id="dsa-abbreviations">DSA Abbreviations</h1>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>DSA</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AAS</td>
+<td>126</td>
+<td>Active Air Susp</td>
+</tr>
+<tr>
+<td>AC</td>
+<td>103</td>
+<td>Air Conditioner</td>
+</tr>
+<tr>
+<td>ACF</td>
+<td>78</td>
+<td>AC Fault Monitor</td>
+</tr>
+<tr>
+<td>ACL</td>
+<td>137</td>
+<td>AC Load Control</td>
+</tr>
+<tr>
+<td>ACM</td>
+<td>77</td>
+<td>AC Load Monitor</td>
+</tr>
+<tr>
+<td>ACS</td>
+<td>140</td>
+<td>Generic AC Source</td>
+</tr>
+<tr>
+<td>AFZ</td>
+<td>109</td>
+<td>Aux Freezer</td>
+</tr>
+<tr>
+<td>AGS</td>
+<td>65</td>
+<td>AutoGenStart</td>
+</tr>
+<tr>
+<td>AHT</td>
+<td>97</td>
+<td>Aux Heat</td>
+</tr>
+<tr>
+<td>ALM</td>
+<td>144</td>
+<td>Alarm</td>
+</tr>
+<tr>
+<td>ALV</td>
+<td>83</td>
+<td>Air Leveler System</td>
+</tr>
+<tr>
+<td>ARF</td>
+<td>108</td>
+<td>Aux Refrigerator</td>
+</tr>
+<tr>
+<td>ATS</td>
+<td>79</td>
+<td>Auto XFer Switch</td>
+</tr>
+<tr>
+<td>AUD</td>
+<td>112</td>
+<td>Audio Entertainment</td>
+</tr>
+<tr>
+<td>AWN</td>
+<td>130</td>
+<td>Awning</td>
+</tr>
+<tr>
+<td>BAT</td>
+<td>70</td>
+<td>Battery</td>
+</tr>
+<tr>
+<td>BKR</td>
+<td>149</td>
+<td>AC Breaker/Panel</td>
+</tr>
+<tr>
+<td>BRD</td>
+<td>253</td>
+<td>Network Bridge</td>
+</tr>
+<tr>
+<td>CBT</td>
+<td>71</td>
+<td>Chassis Battery</td>
+</tr>
+<tr>
+<td>CHB</td>
+<td>252</td>
+<td>Chassis Bridge</td>
+</tr>
+<tr>
+<td>CHG</td>
+<td>76</td>
+<td>Charge Controller</td>
+</tr>
+<tr>
+<td>CLK</td>
+<td>250</td>
+<td>Clock</td>
+</tr>
+<tr>
+<td>CON</td>
+<td>74</td>
+<td>Converter</td>
+</tr>
+<tr>
+<td>DCL</td>
+<td>146</td>
+<td>DC Load Control</td>
+</tr>
+<tr>
+<td>DIM</td>
+<td>131</td>
+<td>DC Dimmer</td>
+</tr>
+<tr>
+<td>DMP</td>
+<td>129</td>
+<td>Waste Dump</td>
+</tr>
+<tr>
+<td>DSC</td>
+<td>139</td>
+<td>DC Disconnect</td>
+</tr>
+<tr>
+<td>EXT</td>
+<td>143</td>
+<td>External Interface</td>
+</tr>
+<tr>
+<td>FAN</td>
+<td>142</td>
+<td>Vent Fan</td>
+</tr>
+<tr>
+<td>FIL</td>
+<td>128</td>
+<td>Tank AutoFill</td>
+</tr>
+<tr>
+<td>FUR</td>
+<td>94</td>
+<td>Furnace</td>
+</tr>
+<tr>
+<td>GAS</td>
+<td>120</td>
+<td>Gas Detector</td>
+</tr>
+<tr>
+<td>GEN</td>
+<td>64</td>
+<td>Generator</td>
+</tr>
+<tr>
+<td>GPS</td>
+<td>136</td>
+<td>GPS</td>
+</tr>
+<tr>
+<td>HYD</td>
+<td>100</td>
+<td>Hydronic Furnace</td>
+</tr>
+<tr>
+<td>ICE</td>
+<td>110</td>
+<td>Icemaker</td>
+</tr>
+<tr>
+<td>INV</td>
+<td>66</td>
+<td>Inverter</td>
+</tr>
+<tr>
+<td>KPD</td>
+<td>132</td>
+<td>DC Input/Keypad</td>
+</tr>
+<tr>
+<td>LCK</td>
+<td>135</td>
+<td>Door Lock</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>251</td>
+<td>Data Logger</td>
+</tr>
+<tr>
+<td>LPG</td>
+<td>73</td>
+<td>LPG System</td>
+</tr>
+<tr>
+<td>LVL</td>
+<td>81</td>
+<td>Leveler System</td>
+</tr>
+<tr>
+<td>MTR</td>
+<td>138</td>
+<td>DC Motor</td>
+</tr>
+<tr>
+<td>PAN</td>
+<td>68</td>
+<td>Control Panel</td>
+</tr>
+<tr>
+<td>PMP</td>
+<td>127</td>
+<td>Water Pump</td>
+</tr>
+<tr>
+<td>REF</td>
+<td>107</td>
+<td>Refrigerator</td>
+</tr>
+<tr>
+<td>SHD</td>
+<td>134</td>
+<td>Window Shade</td>
+</tr>
+<tr>
+<td>SLD</td>
+<td>84</td>
+<td>Slide Room</td>
+</tr>
+<tr>
+<td>SOC</td>
+<td>69</td>
+<td>StateOfCharge Monitor</td>
+</tr>
+<tr>
+<td>SOL</td>
+<td>141</td>
+<td>Solar Controller</td>
+</tr>
+<tr>
+<td>STL</td>
+<td>249</td>
+<td>Service Tool</td>
+</tr>
+<tr>
+<td>STO</td>
+<td>111</td>
+<td>Stove</td>
+</tr>
+<tr>
+<td>STP</td>
+<td>147</td>
+<td>Step Controller</td>
+</tr>
+<tr>
+<td>THM</td>
+<td>88</td>
+<td>Thermostat</td>
+</tr>
+<tr>
+<td>TNK</td>
+<td>72</td>
+<td>Tank System</td>
+</tr>
+<tr>
+<td>TPM</td>
+<td>133</td>
+<td>Tire Monitor</td>
+</tr>
+<tr>
+<td>TVL</td>
+<td>118</td>
+<td>TV Lift</td>
+</tr>
+<tr>
+<td>VID</td>
+<td>115</td>
+<td>Video Entertainment</td>
+</tr>
+<tr>
+<td>VLV</td>
+<td>148</td>
+<td>Plumbing Valve</td>
+</tr>
+<tr>
+<td>VST</td>
+<td>150</td>
+<td>Vehical Seat</td>
+</tr>
+<tr>
+<td>WDW</td>
+<td>145</td>
+<td>Window Controller</td>
+</tr>
+<tr>
+<td>WEA</td>
+<td>80</td>
+<td>Weather Station</td>
+</tr>
+<tr>
+<td>WHT</td>
+<td>101</td>
+<td>Water Heater</td>
+</tr>
+</tbody>
+</table>
+<h1 id="how-rct-evaluates-burstiness">How RCT Evaluates Burstiness</h1>
+<p>"Burstiness" refers to the tendency for poorly programmed nodes to send out their messages in bursts, which may seem harmless unless one realizes that other devices may also be as "bursty", and their bursts
+may just happen to coincide.</p>
+<p>To measure burstiness, we consider the probability that a second device attempting to access the network will encounter excessive traffic.  For each situation, we define a "burst" in terms of how many messages are tolerated 
+within a particular time window.  For example, the definition in test ND-90 is no more than one message in each 50ms window.  (RCT adds some tolerance through the <em>50MS Timing Tolerance</em> setting.)  </p>
+<p>In addition to the PASS/DNP result, RCT reports the results of its evaluation with an array of numbers suitable for cut-and-pasting into a spreadsheet.  Here is a typical array.</p>
+<pre><code>45,&quot;ms&quot;,16.123,&quot;sec&quot;,3,&quot;max&quot;,0.823,0.170,0.004,0.002
+</code></pre>
+<ul>
+<li>The time window used in the test. <em>45 ms</em>.</li>
+<li>The duration of the test.  <em>16.123 ms</em>.</li>
+<li>The largest "burst" seen.  <em>3 max</em></li>
+<li>The probability that when a second device attempts to access the network, in the 45ms beforehand there were 0 messages.  <em>0.823 (82.3%)</em></li>
+<li>The probability that when a second device attempts to access the network, in the 45ms beforehand there was 1 message.  <em>0.170 (17.0%)</em></li>
+<li>The probability that when a second device attempts to access the network, in the 45ms beforehand there were 2 messages.  <em>0.004 (0.4%)</em></li>
+<li>The probability that when a second device attempts to access the network, in the 45ms beforehand there were 3 messages.  <em>0.002 (0.2%)</em></li>
+</ul>
+<p>The RVIA Test Procedures document does not spell out specific degrees of leniency, though it states that due to the nature of the CAN bus arbitration process, some leniency is required.  RCT allows some leniency 
+through the <em>50MS Timing Tolerance</em> and <em>250MS Timing Tolerance</em> settings.  Additional leniency may be provided in the tests as documented in these web pages.  </p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>2025 Trillium Electronics Inc.</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -91,6 +91,10 @@
 <li>Manufacturer ID.  This is the value used in the ADDRESS_CLAIMED message.  A unique value is absolutely mandatory for all manufacturers.</li>
 <li>Full ADDRESS_CLAIM Value.  This can be read directly from the DUT by running the <em>Read ADDRESS_CLAIM from DUT</em> "test".</li>
 </ul>
+<h2 id="preliminaries">Preliminaries</h2>
+<p><strong>RAC</strong>  <em>Read ADDRESS_CLAIM from DUT</em> is not a test but merely a quick and easy way to get the ADDRESS_CLAIM value into the profile.</p>
+<p><strong>SSA</strong>  <em>Single Source Address</em> is not included in the RV-C Test Procedure document, but the requirement for a device to use a single source address is essential to RV-C and RCT relies on devices adhering to the rule.
+The test also verifies that the <em>Identifying DGN</em> and <em>Identifying Instance</em> settings properly identify the device.</p>
 <h2 id="static-addressing-tests">Static Addressing Tests</h2>
 <p>Most products will be required to perform either the Static Addressing or Dynamic Addressing tests.  The static addressing tests (A-10 to A-30) are straightforward.</p>
 <h2 id="dynamic-addressing-tests">Dynamic Addressing Tests</h2>

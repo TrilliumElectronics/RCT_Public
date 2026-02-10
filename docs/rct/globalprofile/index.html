@@ -97,6 +97,9 @@
 <p>These settings apply to many different tests.</p>
 <ul>
 <li>250MS Timing Tolerance (10 ms).  All tests requiring an event within (or after) 250ms is allowed this much error.</li>
+<li>50MS Timing Tolerance (5 ms).  All tests requiring an event within (or after) 50ms is allowed this much error.</li>
+<li>Identifying DGN.  RCT uses this to find the DUT on the network before most tests can start.  Pick a status DGN that the device transmits frequently automatically.  The value is in hexadecimal (e.g. WATERHEATER_STATUS -&gt; 1FFF7).</li>
+<li>Identifying Instance.  Used in combination with the <em>Identifying DGN</em> to find the DUT.  If the DGN does not have an Instance field, enter <em>FF</em>.</li>
 </ul>
 <h2 id="miscellaneous-settings">Miscellaneous Settings</h2>
 <p>Most users, most of the time, will leave these settings at their default values. </p>
