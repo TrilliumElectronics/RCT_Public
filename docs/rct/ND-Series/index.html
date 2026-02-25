@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>A - Network Integrity and Diagnostics - RCT - the RV-C Compatibility Tester</title>
+    <title>ND - Network Integrity and Diagnostics - RCT - the RV-C Compatibility Tester</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "A - Network Integrity and Diagnostics";
+        var mkdocs_page_name = "ND - Network Integrity and Diagnostics";
         var mkdocs_page_input_path = "rct\\ND-Series.md";
         var mkdocs_page_url = null;
       </script>
@@ -74,7 +74,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">A - Network Integrity and Diagnostics</li>
+      <li class="breadcrumb-item active">ND - Network Integrity and Diagnostics</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -83,11 +83,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="a-network-integrity-and-diagnostics">A - Network Integrity and Diagnostics</h1>
+                <h1 id="nd-network-integrity-and-diagnostics">ND - Network Integrity and Diagnostics</h1>
 <p>The values in parentheses are the default values provided by RCT.</p>
 <p>Many tests begin by searching for the DUT address.  This requires two settings to be correct.
 * Identifying DGN.  Pick a status DGN that the device transmits frequently automatically.  The value is in hexadecimal (e.g. WATERHEATER_STATUS -&gt; 1FFF7).
 * Identifying Instance.  Used in combination with the <em>Identifying DGN</em> to find the DUT.  If the DGN does not have an Instance field, enter <em>FF</em>.</p>
+<h2 id="bus-traffic-evaluation">Bus Traffic Evaluation</h2>
+<p>Test <em>NDBE</em> is intended to answer the basic question - is this RV-C network prone to "traffic jams"?  It doesn't just detect bursts as they occur but measures how messages are spread out over time, which is 
+tells you how efficient the network is being utilyzed and therefore how much more traffic it can bear.</p>
+<p>This is not an official RV-C compatibility test.  It is intended for use on a full RV network in actual use, not just one device on the bench.</p>
+<p>The test requires 30 seconds, during which time the network should be exercised as it might normally be used.  While it is sampling the network, perform routine operations such as turning lights on and off,
+raising and lowering shades, starting the generator, etc..  Do not attempt any diagnostic operations, firmward downloads, or the other activities beyond the normal operation of the RV.</p>
+<p>To analyze the bus activity, the NDBE test creates five data sets.  Each data set breaks up the timeline into windows of a particular length.  At the conclusion of the test, it calculates the probable number of
+messages that a random window might contain.  The most critical data set looks at 5ms windows.  Note that the RV-C bus can reliably accommodate no more than 8 messages in that time frame, so if the test registers 
+a non-zero probability that 7 or more messages exist in a random window, it reports a <em>Critical Burst</em>.  </p>
+<p>Similarly, if the data set tracking 10ms windows sees 12 or more messages in one window, it reports a <em>Serious Burst</em>.  If the 25ms tracker sees 26 or more messages in one
+window, it reports an <em>Extreme Load</em>.  If the 50ms tracker sees 41 or more, it reports <em>High Load</em>.</p>
+<p>The test also examines how well spread the messages are by comparing the data statistically with what would be expected on a fully randomized network.  Note that this is a very low bar - almost any attempt at all to 
+avoid bursts and smooth out transmissions over time will beat random luck.  If the distribution of messages within 5ms windows is worse than random, the test reports <em>Poor Gap Management</em>.  If the distribution over 
+the 100ms window is worse than random, the test reports <em>Poor Load Variation Management</em>.  </p>
+<p>Whether or not any of these messages will translate to actual malfunction depends on the capacity of each network device to buffer data and tolerate the additional latency.  This capacity has little to do with the 
+power of the microprocessor or the amount of RAM it has, but rather to details in their CAN implementation.  In a burst, a device might drop incoming messages, outgoing transmissions, or both.  Occasional losses are 
+usually harmless, but sometimes lead to a meaningful malfunction - and they are always difficult to diagnose.  High load conditions suggest that, even if bursts are not occuring in normal operation, they are likely 
+to occur during diagnostics or in special circumstances.  <em>Poor Management</em> indicates that the network may have problems scaling up - the practical capacity of the network falls short of what it theoretically should 
+be able to handle.</p>
+<p>The data collected during the test is included in the log and can be cut-and-pasted into a spreadsheet for more detailed analysis.  The data is comma-delimited, and can be saved as a CSV file or directly pasted in.<br />
+Each line of data includes the statistical summary and an array of <em>n+1</em> numbers indicating the probabilities of a window of the particular size containing <em>n</em> messages.  </p>
 <h2 id="dgn-request-tests">DGN Request tests</h2>
 <p>Tests ND-10 through ND-30 require the following settings.</p>
 <ul>
@@ -114,12 +135,8 @@ requires a level of stupidity that the authors of these tests do not wish to con
 </ul>
 <p>Note that RCT does not check whether the DSA list is actually correct.  The <em>DSA does not match device function.</em> failure must be checked by the user.</p>
 <p>For the five second and one second timing intervals, a 20% tolerance is allowed.</p>
-<p>To determine whether the broadcasts are appropriately staggered, RCT checks the data traffic using the following definition of <a href="./#How RCT Evaluates Burstiness">burstiness</a> : </p>
-<ul>
-<li>If the number of DSAs supported is &lt;3, the time window is 250ms (adjusted) and the expection is no more than a 5% chance that 2 messages will be sent in that window.</li>
-<li>If the number of DSAs supported is 3+, the window is multiplied by <em>4/(d+2)</em>, with the same probability expectation.</li>
-</ul>
-<p>Although only ND-50 (No Faults test) requires the gap test, the same data is included in the ND-60 test as well.</p>
+<p>To determine whether the broadcasts are appropriately staggered, RCT uses the same time-window analysis as for test NDBE (Bus Traffic Evaluation) above.  It uses a 100ms window, comparing the device reports 
+against a random schedule.  </p>
 <h1 id="dsa-abbreviations">DSA Abbreviations</h1>
 <table>
 <thead>
