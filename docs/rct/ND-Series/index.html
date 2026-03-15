@@ -130,13 +130,57 @@ requires a level of stupidity that the authors of these tests do not wish to con
 <h2 id="dm_rv-tests">DM_RV Tests</h2>
 <p>Tests ND-50 through ND-70 require </p>
 <ul>
-<li>DSAs Reported.  This is a string of codes, per the <a href="./#DSA Abbreviations">table</a> below. </li>
+<li>DSAs Reported.  This is a string of codes, per the table below. </li>
 <li>Statically Addressed.  Set to Yes if the device uses its DSA as its SA.</li>
 </ul>
 <p>Note that RCT does not check whether the DSA list is actually correct.  The <em>DSA does not match device function.</em> failure must be checked by the user.</p>
 <p>For the five second and one second timing intervals, a 20% tolerance is allowed.</p>
-<p>To determine whether the broadcasts are appropriately staggered, RCT uses the same time-window analysis as for test NDBE (Bus Traffic Evaluation) above.  It uses a 100ms window, comparing the device reports 
-against a random schedule.  </p>
+<p>To determine whether the broadcasts are appropriately staggered, RCT uses the same time-window analysis as for test NDBE (Bus Traffic Evaluation) above.  It uses a window, comparing the device reports 
+against a random schedule.  Note that this is a very low bar - almost any attempt to stagger the transmissions will beat purely random broadcasts.</p>
+<h3 id="nd-60-nd-70">ND-60, ND-70</h3>
+<p>Development on these two tests is postponed until certain issues are clarified in the RVIA document.</p>
+<h2 id="operational-fundamentals">Operational Fundamentals</h2>
+<p>These tests are among the most difficult to write and implement, as they each attempt to address a fundamental principle rather than a specific glitch.  RCT can't always try every possible combination of values that 
+might trigger a failure, so success is rarely absolute.</p>
+<h3 id="device-traffic-evaluation">Device Traffic Evaluation</h3>
+<p>This is not an official test but a preliminary evaluation that preceded the <em>Sample of Network Traffic</em> test.  It samples device transmissions over a 30 second interval and provides guidance regarding whether the product is 
+ready for formal testing and what global message gap is appropriate for the device.  Ideally the test should be conducted on a functioning real-world network, with the device being used in its normal manner.  Motion devices should 
+<em>not</em> be moved - motion status DGNs are allowed to override the general gap requirements that govern ordinary activity.</p>
+<p>The procedure evaluates device activity over various time windows from 10ms to 250ms.  Multiple messages within 10ms windows are flagged - RV-C allows such bursts when the extra messages are in response to requests or commands, 
+but not for normal status broadcasts.</p>
+<p>The procedure also evaluates the overall bus traffic.  In general, devices are expected to transmit their status DGNs with a minimum of a 50 ms gap between messages.  Some headroom, though, is appropriate to accommodate extra DM_RV messages 
+and on-change status DGNs.  The RV-C document does not specify a particular amount of headroom - RCT suggests that devices reserve 50% of their bandwidth for these extra messages.  Devices that support a large number of on-change 
+status messages may require more.  Devices that generate a lot of high-frequency messages and few others (e.g. transfer switch) need less.</p>
+<p>If a device is too busy to provide a 50ms gap between messages and still have headroom (i.e. more than 10 m/s in normal operation), the gaps for specific status DGNs should be adjusted upwards, to values no higher than their listed maximum 
+message gaps.  Only after the schedule has been adjusted as much as possible should the general gap be reduced.  </p>
+<p>After all gap adjustments have been made, if the recommended gap is still less than 50ms, you can change the <em>Overall Transmission Gap</em> setting.  RCT will then use that parameter when evaluating device traffic.</p>
+<h3 id="proprietary-messages">Proprietary Messages</h3>
+<p>In this test, RCT sends 2500 random proprietary messages.  For each message, if it receives any sort of response within 10ms, it considers that a candidate failure.  Each candidate failure gets retested up to four more times, 
+and if a response is noted each time a failure is reported.  False positives are possible for very busy devices.  </p>
+<h3 id="sample-of-network-traffic">Sample of Network Traffic</h3>
+<p>This is the most general test of RV-C compatibility.  It answers three basic questions:</p>
+<ul>
+<li>Are packets properly constructed?</li>
+<li>Is the data within the packets properly encoded?</li>
+<li>Are the packets properly distributed over time?</li>
+</ul>
+<p>The tests for packet construction are straightforward.  The test for data encoding uses the same "sniffing" dictionary as Omniscope's standalone RV-C Sniffer.  During the test, the sniffer parses every incoming messsage 
+and displays the values.  The "sniff box" updates continuously and can be resized and sorted on the fly.  The sniffer can parse every message but it can't verify that the values correspond to reality.  It's up to the 
+humans in the system to watch the sniff box and verify that the values are correct.  At the end of the test RCT asks for the result.</p>
+<p>The test checks both the overall message gap timing and the gap times for specific DGNs.  It uses the <em>Overall Transmission Gap</em>, with some additional leeway to account for variation in bus access time.  The leeway is 
+calculated proportionately using the <em>50MS Timing Tolerance</em> setting.  For example, if <em>50MS Timing Tolerance</em>=10ms and <em>Overall Transmission Gap</em>=30ms, RCT will provide 6ms of leeway in the test.</p>
+<p>There are two ways to fail the general gap test.  Occasional violations are tolerated, as responses to commands and requests are allowed to be immediate.  RCT does not track all possible message triggers - it merely tracks 
+the number of these single-extra message violations and if they exceed 10% of the total traffic RCT flags it as a failure.  It immediately flags as a failure any time three or more messages appear within the gap time.</p>
+<p>There are two ways to fail the DGN-specific gap test.  Occasional violations of the minimum gap are tolerated to account for commands and requests, but any more than one violation within the gap window is flagged as a violation. 
+Any violation of the maximum gap requirement is flagged as a failure.  </p>
+<p>The device should be tested in as close to a real-world environment as possible - ideally, in a working RV.  The device should be operated as it would be routinely used in the RV.  For example, if the DUT is an air conditioner, 
+the test should included cycling through the possible operating modes, adjusting the thermostat, and watching the unit start and stop.  But some operations should be avoided as they will likely trigger a false positive.</p>
+<ul>
+<li>Moving devices (e.g. slide, awning) should not be moved.  </li>
+<li>Control panels (e.g. keypads, touchscreens) should not be used to control movement.</li>
+<li>Test, diagnostic, and configuration operations should not be performed.</li>
+<li>Do not add new devices to the network during the test.  Some devices poll the network for data upon startup, which can cause false-positives on the gaps tests.</li>
+</ul>
 <h1 id="dsa-abbreviations">DSA Abbreviations</h1>
 <table>
 <thead>
