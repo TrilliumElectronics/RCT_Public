@@ -181,6 +181,46 @@ the test should included cycling through the possible operating modes, adjusting
 <li>Test, diagnostic, and configuration operations should not be performed.</li>
 <li>Do not add new devices to the network during the test.  Some devices poll the network for data upon startup, which can cause false-positives on the gaps tests.</li>
 </ul>
+<h3 id="ignore-source-address-empty-commands-incorrect-instance">Ignore Source Address, Empty Commands, Incorrect Instance</h3>
+<p>Each of these tests each require devising two different commands that the device supports.  </p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th>Command A</th>
+<th>Command B</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ND-100</td>
+<td>Ignore Source Address</td>
+<td><em>Supported Command 1</em></td>
+<td><em>Supported Command 2</em></td>
+<td>Uses all data bytes.  Best if command B "undoes" command A.</td>
+</tr>
+<tr>
+<td>ND-110</td>
+<td>Empty Commands</td>
+<td><em>Supported Command 1</em></td>
+<td><em>Supported Command 3</em></td>
+<td>Uses only the instance bytes.  The DGNs must be different, if possible.</td>
+</tr>
+<tr>
+<td>ND-140</td>
+<td>Incorrect Instance</td>
+<td><em>Supported Command 1</em></td>
+<td><em>Supported Command 3</em></td>
+<td>Uses all data bytes but instance.  The DGNs must be different, if possible.</td>
+</tr>
+</tbody>
+</table>
+<p>Each command is entered in a hexadecimal string, with the DGN followed by the eight data bytes, separated by spaces.  For example, <em>1FEF9 01 F3 FF FF FF FF FF FF</em> 
+represents THERMOSTAT_COMMAND_1, with Instance 1, Operating Mode 3, and all other fields ignored.</p>
+<p>For the responses, (<em>Expected Response 1</em>, etc.) only the DGN is required.  RCT only checks the instances of the responses, not the data fields.  </p>
+<p>Test ND-140 only randomizes the standard instance byte (byte 0).  It does not randomize the secondary instances for DGNs such as THERMOSTAT_SCHEDULE_COMMAND_1.</p>
 <h1 id="dsa-abbreviations">DSA Abbreviations</h1>
 <table>
 <thead>
