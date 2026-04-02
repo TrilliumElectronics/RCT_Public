@@ -137,6 +137,8 @@ requires a level of stupidity that the authors of these tests do not wish to con
 <p>For the five second and one second timing intervals, a 20% tolerance is allowed.</p>
 <p>To determine whether the broadcasts are appropriately staggered, RCT uses the same time-window analysis as for test NDBE (Bus Traffic Evaluation) above.  It uses a window, comparing the device reports 
 against a random schedule.  Note that this is a very low bar - almost any attempt to stagger the transmissions will beat purely random broadcasts.</p>
+<p>Test ND-120 automatically finds the DUT on the network and waits for it to send a fault.  The test only checks for one fault - if the device displays multiple faults
+the results might not be valid.</p>
 <h3 id="nd-60-nd-70">ND-60, ND-70</h3>
 <p>Development on these two tests is postponed until certain issues are clarified in the RVIA document.</p>
 <h2 id="operational-fundamentals">Operational Fundamentals</h2>
@@ -221,6 +223,24 @@ the test should included cycling through the possible operating modes, adjusting
 represents THERMOSTAT_COMMAND_1, with Instance 1, Operating Mode 3, and all other fields ignored.</p>
 <p>For the responses, (<em>Expected Response 1</em>, etc.) only the DGN is required.  RCT only checks the instances of the responses, not the data fields.  </p>
 <p>Test ND-140 only randomizes the standard instance byte (byte 0).  It does not randomize the secondary instances for DGNs such as THERMOSTAT_SCHEDULE_COMMAND_1.</p>
+<h3 id="nak-of-unsupported-commands">NAK of Unsupported Commands</h3>
+<p>Test ND-130 requires five commands to be broadcast with invalid values.  The DUT is expected to respond with a NAK for each.  The default message (<em>"Unsupported Command X</em>) is the DATE_TIME_COMMAND,
+set to 13-31-99 at 25:61:61 - an example of a legitimate command being broadcast with invalid values.  Substitute commands applicable to the DUT.  If there are not
+five different sets of command values that apply, you may duplicate messages - RCT does not check for duplication.</p>
+<p>There are three principle ways in which a command may trigger a NAK.  </p>
+<ul>
+<li>The command may have impossible values (such as setting the month to 13).  </li>
+<li>The command may have values that are meaningful but are not supported by the device (e.g. setting a furnace <em>heat source</em> to <em>engine heat</em>, when only combustion and electric are supported.)* </li>
+<li>The current conditions do not allow the command to be processed.  (e.g. extending the moving device when a safety lock prevents it.)</li>
+</ul>
+<p>In the first two cases there is some discretion allowed.  Rather than fail with a NAK, a device is allowed to "fix" the errant value when safe and sppropriate.  For example, 
+the device replace an out-of-bounds value with the closest acceptable value.  No such discretion is allowed in the third case - feedback is often crucial.</p>
+<p>The following cases do not require a NAK.</p>
+<ul>
+<li>The command has an incorrect instance.  (This allows other devices to possibly process the command.)</li>
+<li>The problematic data field is not supported by the device at all.</li>
+</ul>
+<p>This test only checks for the NAK.  It does not monitor any status DGNs.</p>
 <h1 id="dsa-abbreviations">DSA Abbreviations</h1>
 <table>
 <thead>
