@@ -128,63 +128,44 @@ The unofficial Instanced test uses <em>Supported DGN 1</em>.  It monitors the DU
 <p>Test ND-40 does not require any particular settings.  Note that the test does not specifically check that the contents of the Product ID are useful.  Failing to put useful data in the fundamental identification DGN 
 requires a level of stupidity that the authors of these tests do not wish to contemplate could exist.</p>
 <h2 id="dm_rv-tests">DM_RV Tests</h2>
-<p>Tests ND-50 through ND-70 require </p>
-<ul>
-<li>DSAs Reported.  This is a string of codes, per the table below. </li>
-<li>Statically Addressed.  Set to Yes if the device uses its DSA as its SA.</li>
-</ul>
+<p>For all timing values (1000ms and 5000ms), the tolerance is in proportion to the <em>250MS Timing Tolerance</em>.  </p>
+<h3 id="nd-50-dm_rv-no-faults">ND-50  DM_RV - No Faults</h3>
+<p>Test ND-50 requires 
+* DSAs Reported.  This is a string of codes, per the table below. 
+* Statically Addressed.  Set to Yes if the device uses its DSA as its SA.</p>
 <p>Note that RCT does not check whether the DSA list is actually correct.  The <em>DSA does not match device function.</em> failure must be checked by the user.</p>
-<p>For the five second and one second timing intervals, a 20% tolerance is allowed.</p>
 <p>To determine whether the broadcasts are appropriately staggered, RCT uses the same time-window analysis as for test NDBE (Bus Traffic Evaluation) above.  It uses a window, comparing the device reports 
 against a random schedule.  Note that this is a very low bar - almost any attempt to stagger the transmissions will beat purely random broadcasts.</p>
-<p>Test ND-120 automatically finds the DUT on the network and waits for it to send a fault.  The test only checks for one fault - if the device displays multiple faults
-the results might not be valid.</p>
-<h3 id="nd-60-nd-70">ND-60, ND-70</h3>
-<p>Development on these two tests is postponed until certain issues are clarified in the RVIA document.</p>
-<h2 id="operational-fundamentals">Operational Fundamentals</h2>
-<p>These tests are among the most difficult to write and implement, as they each attempt to address a fundamental principle rather than a specific glitch.  RCT can't always try every possible combination of values that 
-might trigger a failure, so success is rarely absolute.</p>
-<h3 id="device-traffic-evaluation">Device Traffic Evaluation</h3>
-<p>This is not an official test but a preliminary evaluation that preceded the <em>Sample of Network Traffic</em> test.  It samples device transmissions over a 30 second interval and provides guidance regarding whether the product is 
-ready for formal testing and what global message gap is appropriate for the device.  Ideally the test should be conducted on a functioning real-world network, with the device being used in its normal manner.  Motion devices should 
-<em>not</em> be moved - motion status DGNs are allowed to override the general gap requirements that govern ordinary activity.</p>
-<p>The procedure evaluates device activity over various time windows from 10ms to 250ms.  Multiple messages within 10ms windows are flagged - RV-C allows such bursts when the extra messages are in response to requests or commands, 
-but not for normal status broadcasts.</p>
-<p>The procedure also evaluates the overall bus traffic.  In general, devices are expected to transmit their status DGNs with a minimum of a 50 ms gap between messages.  Some headroom, though, is appropriate to accommodate extra DM_RV messages 
-and on-change status DGNs.  The RV-C document does not specify a particular amount of headroom - RCT suggests that devices reserve 50% of their bandwidth for these extra messages.  Devices that support a large number of on-change 
-status messages may require more.  Devices that generate a lot of high-frequency messages and few others (e.g. transfer switch) need less.</p>
-<p>If a device is too busy to provide a 50ms gap between messages and still have headroom (i.e. more than 10 m/s in normal operation), the gaps for specific status DGNs should be adjusted upwards, to values no higher than their listed maximum 
-message gaps.  Only after the schedule has been adjusted as much as possible should the general gap be reduced.  </p>
-<p>After all gap adjustments have been made, if the recommended gap is still less than 50ms, you can change the <em>Overall Transmission Gap</em> setting.  RCT will then use that parameter when evaluating device traffic.</p>
-<h3 id="proprietary-messages">Proprietary Messages</h3>
-<p>In this test, RCT sends 2500 random proprietary messages.  For each message, if it receives any sort of response within 10ms, it considers that a candidate failure.  Each candidate failure gets retested up to four more times, 
-and if a response is noted each time a failure is reported.  False positives are possible for very busy devices.  </p>
-<h3 id="sample-of-network-traffic">Sample of Network Traffic</h3>
-<p>This is the most general test of RV-C compatibility.  It answers three basic questions:</p>
-<ul>
-<li>Are packets properly constructed?</li>
-<li>Is the data within the packets properly encoded?</li>
-<li>Are the packets properly distributed over time?</li>
-</ul>
-<p>The tests for packet construction are straightforward.  The test for data encoding uses the same "sniffing" dictionary as Omniscope's standalone RV-C Sniffer.  During the test, the sniffer parses every incoming messsage 
-and displays the values.  The "sniff box" updates continuously and can be resized and sorted on the fly.  The sniffer can parse every message but it can't verify that the values correspond to reality.  It's up to the 
-humans in the system to watch the sniff box and verify that the values are correct.  At the end of the test RCT asks for the result.</p>
-<p>The test checks both the overall message gap timing and the gap times for specific DGNs.  It uses the <em>Overall Transmission Gap</em>, with some additional leeway to account for variation in bus access time.  The leeway is 
-calculated proportionately using the <em>50MS Timing Tolerance</em> setting.  For example, if <em>50MS Timing Tolerance</em>=10ms and <em>Overall Transmission Gap</em>=30ms, RCT will provide 6ms of leeway in the test.</p>
-<p>There are two ways to fail the general gap test.  Occasional violations are tolerated, as responses to commands and requests are allowed to be immediate.  RCT does not track all possible message triggers - it merely tracks 
-the number of these single-extra message violations and if they exceed 10% of the total traffic RCT flags it as a failure.  It immediately flags as a failure any time three or more messages appear within the gap time.</p>
-<p>There are two ways to fail the DGN-specific gap test.  Occasional violations of the minimum gap are tolerated to account for commands and requests, but any more than one violation within the gap window is flagged as a violation. 
-Any violation of the maximum gap requirement is flagged as a failure.  </p>
-<p>The device should be tested in as close to a real-world environment as possible - ideally, in a working RV.  The device should be operated as it would be routinely used in the RV.  For example, if the DUT is an air conditioner, 
-the test should included cycling through the possible operating modes, adjusting the thermostat, and watching the unit start and stop.  But some operations should be avoided as they will likely trigger a false positive.</p>
-<ul>
-<li>Moving devices (e.g. slide, awning) should not be moved.  </li>
-<li>Control panels (e.g. keypads, touchscreens) should not be used to control movement.</li>
-<li>Test, diagnostic, and configuration operations should not be performed.</li>
-<li>Do not add new devices to the network during the test.  Some devices poll the network for data upon startup, which can cause false-positives on the gaps tests.</li>
-</ul>
-<h3 id="ignore-source-address-empty-commands-incorrect-instance">Ignore Source Address, Empty Commands, Incorrect Instance</h3>
-<p>Each of these tests each require devising two different commands that the device supports.  </p>
+<h3 id="nd-52-single-dm_rv">ND-52  Single DM_RV</h3>
+<p>Test ND-52 requires 
+* DSAs Reported.  This is a string of codes, per the table below. </p>
+<p>Start with the device operating with no faults.  Note that RCT can't detect when the fault is physically created.  As you create the fault condition on the device, watch for the fault to appear in the log.  The requirement is that the fault appear within one second.  After 
+the test is complete, put <em>PASS</em> or <em>DNP</em> by <em>Initial report is not within 1000ms.</em> according to your observation.  </p>
+<p>At the end of the test, RCT will ask whether the contents of the fault report are correct.  Examine the information in the log closely before answering.</p>
+<h3 id="nd-54-single-dm_rv-clearing-automatic">ND-54  Single DM_RV Clearing (Automatic)</h3>
+<p>Test ND-54 requires 
+* DSAs Reported.  This is a string of codes, per the table below. </p>
+<p>Start with the device operating with a single active fault.  The requirement is that the device reports that the fault is cleared within one second.  RCT allows a total of two seconds - one second as the normal transmission gap 
+for the active fault and one second for the fault to clear.</p>
+<p>Devices which require faults to be manually cleared should use test ND-120 instead.</p>
+<h3 id="nd-56-nd-60-multiple-dm_rv">ND-56, ND-60  Multiple DM_RV</h3>
+<p>Tests ND-56 and ND-60 requires
+* DSAs Reported.  This is a string of codes, per the table below. </p>
+<p>These tests require the device to report two faults.  With ND-56, the two faults must use the same DSA; with ND-60 the two faults must use different DSAs.  These are preliminary tests for ND-58 and ND-62, which establish that the device properly reports when one faults is cleared.<br />
+The tests can start with the device already reporting faults and are not affected by having more than two faults.</p>
+<h3 id="nd-58-nd-62-multiple-dm_rv-clearing-automatic">ND-58, ND-62  Multiple DM_RV Clearing (Automatic)</h3>
+<p>Tests ND-58 and ND-62 requires
+* DSAs Reported.  This is a string of codes, per the table below. </p>
+<p>These tests establish that the device properly reports when one fault is cleared while another remains active.  The test starts like ND-56 and ND-60 and begins in earnest when it sees two active faults.</p>
+<p>In ND-58, once two faults are seen RCT prompts the user to clear one of the faults and press the spacebar.  In ND-62, it is not necessary to press the spacebar, as RCT can look for the "All Clear" message to know when the fault 
+has been cleared.</p>
+<h3 id="nd-120-clear-faults-command">ND-120  Clear Faults Command</h3>
+<p>Test ND-120 automatically finds the DUT on the network and waits for it to send a fault.  The test only checks for one fault - if the device displays multiple faults the results might not be valid.</p>
+<h2 id="command-response">Command Response</h2>
+<p>These tests pepper the device with random commands, checking to see whether the device is filtering them correctly.  They at least three commands that are supported by the device and five that are not.  For each supported 
+command, the expected response is also required.</p>
+<p>The testing protocol does not require that every command DGN be checked.  Check the most potentially problematic DGNs, as measured by the complexity of the relevant source code in the DUT.</p>
+<p>Three of the test require devising two different commands that the device supports.  </p>
 <table>
 <thead>
 <tr>
@@ -222,7 +203,26 @@ the test should included cycling through the possible operating modes, adjusting
 <p>Each command is entered in a hexadecimal string, with the DGN followed by the eight data bytes, separated by spaces.  For example, <em>1FEF9 01 F3 FF FF FF FF FF FF</em> 
 represents THERMOSTAT_COMMAND_1, with Instance 1, Operating Mode 3, and all other fields ignored.</p>
 <p>For the responses, (<em>Expected Response 1</em>, etc.) only the DGN is required.  RCT only checks the instances of the responses, not the data fields.  </p>
-<p>Test ND-140 only randomizes the standard instance byte (byte 0).  It does not randomize the secondary instances for DGNs such as THERMOSTAT_SCHEDULE_COMMAND_1.</p>
+<h3 id="nd-100-ignore-source-address">ND-100 Ignore Source Address</h3>
+<p>This test is much easier to run if <em>Supported Command 1</em> and <em>Supported Command 2</em> have opposite actions, such as one turned the device on, the other turning it off.</p>
+<h3 id="nd-130-nak">ND-130  NAK</h3>
+<p>This test requires the following settings:
+* Unsupported Command 1
+* Unsupported Command 2
+* Unsupported Command 3
+* Unsupported Command 4
+* Unsupported Command 5</p>
+<p>This test requires five examples of commands that will be accepted by the DUT (i.e. the DGN and Instance are valid), but can't be processed by the device for some reason.  One common reason for a NAK 
+response is that conditions do not allow the command - e.g. a safety interlock prevents execution (park brake isn't set), or the command is unavailable in the current operating mode (preheating the genset when already running).
+Another common reason is that the device does not support the particular option or the value is out of range - e.g. setting Charging Algorithm to <em>3-stage</em> when the charger only supports <em>CV</em> and <em>2-stage</em>.</p>
+<p>Note that a device is only required to parse (and possibly NAK) fields that it supports in the corresponding status DGN.  For example, an awning does not have to NAK an AWNING_COMMAND to set or release the <em>User Lock</em> if it does not 
+report <em>User Lock</em> in the AWNING_STATUS DGN.  Some command fields do not have corresponding status fields (e.g. <em>Move to Position</em> in AWNING_COMMAND).  For these fields, the device does not have to respond with a NAK.  To summarize, 
+a NAK can be thought of as meaning, "I understand the command and would normally obey, but I can't, and this is the reason why I can't."</p>
+<p>For command values that are out-of-range, RV-C allows some latitude in their interpretation.  It is allowable to interpret a too-high or too-low value as the maximum or minimum supported values - e.g. a command to set the 
+air conditioning cool point to 30 degrees might result in the cool point being set to 60 degrees.  In these cases, no NAK is required.</p>
+<h3 id="nd-140-incorrect-instance">ND-140  Incorrect Instance</h3>
+<p>This test first monitors the device to determine what instances are supported, then directs commands (<em>Supported Command 1</em> and <em>Supported Command 3</em>) to other random instances.</p>
+<p>The test only looks at Byte 0 for the instance.  It might not provide valid results for DGNs that require multiple levels of instancing (e.g. THERMOSTAT_SCHEDULE_COMMAND_1).</p>
 <h3 id="nak-of-unsupported-commands">NAK of Unsupported Commands</h3>
 <p>Test ND-130 requires five commands to be broadcast with invalid values.  The DUT is expected to respond with a NAK for each.  The default message (<em>"Unsupported Command X</em>) is the DATE_TIME_COMMAND,
 set to 13-31-99 at 25:61:61 - an example of a legitimate command being broadcast with invalid values.  Substitute commands applicable to the DUT.  If there are not
@@ -241,6 +241,65 @@ the device replace an out-of-bounds value with the closest acceptable value.  No
 <li>The problematic data field is not supported by the device at all.</li>
 </ul>
 <p>This test only checks for the NAK.  It does not monitor any status DGNs.</p>
+<h2 id="operational-fundamentals">Operational Fundamentals</h2>
+<p>These tests are among the most difficult to write and implement, as they each attempt to address a fundamental principle rather than a specific glitch.  RCT can't always try every possible combination of values that 
+might trigger a failure, so success is rarely absolute.</p>
+<h3 id="nd-80-proprietary-messages">ND-80 Proprietary Messages</h3>
+<p>This test takes a shotgun apprcach to test whether the DUT reacts to propriatary messages not directed at it.  It broadcasts 2500 random proprietary messags on the network and looks for any kind of response.  If the DUT sends 
+any message within 10 ms, it considers it a <em>possible</em> response.  It retests such candidates up to five times to determine whether the response is real.  If any candidates survive the test, the DUT fails.</p>
+<p>A false positive result is barely statistically possible.  A manually examination of the log should reveal whether the apparent responses were actually triggered by the random messages or were part of the normal device operation.</p>
+<p>It is important to run this on an otherwise empty network.  Other devices may respond in unpredictable ways to the random proprietary messages generated.</p>
+<h3 id="nd-90-sample-of-network-traffic">ND-90  Sample of Network Traffic</h3>
+<p>This is the most general test of RV-C compatibility.  It answers three basic questions:</p>
+<ul>
+<li>Are packets properly constructed?</li>
+<li>Is the data within the packets properly encoded?</li>
+<li>Are the packets properly distributed over time?</li>
+</ul>
+<p>The tests for packet construction are straightforward.  The test for data encoding uses the same "sniffing" dictionary as Omniscope's standalone RV-C Sniffer.  During the test, the sniffer parses every incoming messsage 
+and displays the values.  The "sniff box" updates continuously and can be resized and sorted on the fly.  The sniffer can parse every message but it can't verify that the values correspond to reality.  It's up to the 
+humans in the system to watch the sniff box and verify that the values are correct.  At the end of the test RCT asks for the result.</p>
+<p><img alt="Data Sniffer" src="../img/sniffer.JPG" /></p>
+<p>The test requires that RCT sees the device in action, and it's essential that all the DUT's operationsl features are exercised.  While operating the unit, watch the Data Sniffer for errors.  Extraneous data - that is, items 
+that aren't actually supported by the device but show as in the box (typically with a 0 value) are usually mistakes in how the DGN is constructed.  Remember that a zero value in any RV-C field is a promise that the device supports 
+that field.  Erroneous data is usually a mistake in how the specific field is encoded.  RCT can't determine on its own whether the data from the DUT actually represents reality.<br />
+At the end of the test, RCT simply asks whether the user found any discrepancies in Data Sniffer.   </p>
+<p>The test checks both the overall message gap timing and the gap times for specific DGNs.  It uses the <em>Overall Transmission Gap</em>, with some additional leeway to account for variation in bus access time.  The leeway is 
+calculated proportionately using the <em>50MS Timing Tolerance</em> setting.  For example, if <em>50MS Timing Tolerance</em>=10ms and <em>Overall Transmission Gap</em>=30ms, RCT will provide 6ms of leeway in the test.</p>
+<p>There are two ways to fail the general gap test.  Occasional violations are tolerated, as responses to commands and requests are allowed to be immediate.  RCT does not track all possible message triggers - it merely tracks 
+the number of these single-extra message violations and if they exceed 10% of the total traffic RCT flags it as a failure.  It immediately flags as a failure any time three or more messages appear within the gap time.</p>
+<p>There are two ways to fail the DGN-specific gap test.  Occasional violations of the minimum gap are tolerated to account for commands and requests, but any more than one violation within the gap window is flagged as a violation. 
+Any violation of the maximum gap requirement is flagged as a failure.  </p>
+<p>The device should be tested in as close to a real-world environment as possible - ideally, in a working RV.  The device should be operated as it would be routinely used in the RV.  For example, if the DUT is an air conditioner, 
+the test should included cycling through the possible operating modes, adjusting the thermostat, and watching the unit start and stop.  But some operations should be avoided as they will likely trigger a false positive.</p>
+<ul>
+<li>Moving devices (e.g. slide, awning) should not be moved.  </li>
+<li>Control panels (e.g. keypads, touchscreens) should not be used to control movement.</li>
+<li>Test, diagnostic, and configuration operations should not be performed.</li>
+<li>Do not add new devices to the network during the test.  Some devices poll the network for data upon startup, which can cause false-positives on the gaps tests.</li>
+</ul>
+<p>Note that motion operations specifically get covered in application-level testing.</p>
+<h3 id="nd-150-transparency-of-control-activity">ND-150  Transparency of Control Activity</h3>
+<p>This test is nearly identical to ND-90, but rather than exercising the device through an RV-C control panel, keypad or tool, the device is operating through whatever user-interface is implemented outside the RV-C network.<br />
+This might be as minimal as a start/stop switch on the device, but it could be a touch screen (integrated into the device or mounted remotely), or a cell-phone app that uses Bluetooth or Wi-Fi.  Many devices, of course, have 
+nothing of the sort and this test can be skipped.</p>
+<p>Just as in ND-90, this test requires simply operating the device - covering all its functions, and monitoring the status in the Data Sniffer box.  Unlike ND-90, RCT can't perform any meaningful timing tests, as it cannot 
+see exactly when any button gets pressed.  The test relies on human perception.  When the state of the DUT changes, the data in RCT should update almost immediately - the gap should be barely perceptable.  Each operation 
+should be repeated several times to be sure.  </p>
+<p>Unlike ND-90, the test should include motion operations.</p>
+<p>Like ND-90, at the end of the test the operator is prompted whether they observed any data or timing glitches.  A sorted and parsed data log is provided to allow more detailed analysis.</p>
+<h1 id="device-traffic-evaluation">Device Traffic Evaluation</h1>
+<p>This is not an official test but a preliminary evaluation that preceded the <em>Sample of Network Traffic</em> test.  It samples device transmissions over a 30 second interval and provides guidance regarding whether the product is 
+ready for formal testing and what global message gap is appropriate for the device.  Ideally the test should be conducted on a functioning real-world network, with the device being used in its normal manner.  Motion devices should 
+<em>not</em> be moved - motion status DGNs are allowed to override the general gap requirements that govern ordinary activity.</p>
+<p>The procedure evaluates device activity over various time windows from 10ms to 250ms.  Multiple messages within 10ms windows are flagged - RV-C allows such bursts when the extra messages are in response to requests or commands, 
+but not for normal status broadcasts.</p>
+<p>The procedure also evaluates the overall bus traffic.  In general, devices are expected to transmit their status DGNs with a minimum of a 50 ms gap between messages.  Some headroom, though, is appropriate to accommodate extra DM_RV messages 
+and on-change status DGNs.  The RV-C document does not specify a particular amount of headroom - RCT suggests that devices reserve 50% of their bandwidth for these extra messages.  Devices that support a large number of on-change 
+status messages may require more.  Devices that generate a lot of high-frequency messages and few others (e.g. transfer switch) need less.</p>
+<p>If a device is too busy to provide a 50ms gap between messages and still have headroom (i.e. more than 10 m/s in normal operation), the gaps for specific status DGNs should be adjusted upwards, to values no higher than their listed maximum 
+message gaps.  Only after the schedule has been adjusted as much as possible should the general gap be reduced.  </p>
+<p>After all gap adjustments have been made, if the recommended gap is still less than 50ms, you can change the <em>Overall Transmission Gap</em> setting.  RCT will then use that parameter when evaluating device traffic.</p>
 <h1 id="dsa-abbreviations">DSA Abbreviations</h1>
 <table>
 <thead>
